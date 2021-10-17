@@ -1,7 +1,8 @@
 import './App.css'
 // import Header from './components/Header';
-import Content from './components/Content'
-import About from './components/About'
+import Login from './pages/Login'
+import CreateRsrv from './pages/CreateRsrv'
+import RsrvList from './pages/RsrvList'
 
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
@@ -10,10 +11,13 @@ function App() {
     <Router>
       <Switch>
         <Route exact path="/">
-          <Content />
+          <Login />
         </Route>
-        <Route path="/about">
-          <About />
+        <Route path="/create">
+          <CreateRsrv />
+        </Route>
+        <Route path="/list">
+          <RsrvList />
         </Route>
       </Switch>
     </Router>
