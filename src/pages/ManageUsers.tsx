@@ -15,7 +15,7 @@ function ManageUsers() {
           "
           data-for="title"
         >
-          ユーザ登録ページ
+          ユーザ管理ページ
           <ReactTooltip
             id="title"
             effect="float"
