@@ -1,10 +1,10 @@
 import './App.css'
 // import Header from './components/Header';
 import Login from './pages/Login'
-import MakeRsrv from './pages/MakeRsrv'
+import MakeRsrv from 'pages/MakeRsrv'
 import RsrvList from './pages/RsrvList'
-import CreateUser from './pages/CreateUser'
-import UserList from './pages/UserList'
+import ManageUsers from './pages/ManageUsers'
+import ManageFacilities from './pages/ManageFacilities'
 import UsageFee from './pages/UsageFee'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
@@ -18,11 +18,11 @@ function App() {
         <Route path="/rsrv_list">
           <RsrvList />
         </Route>
-        <Route path="/create_user">
-          <CreateUser />
+        <Route path="/manage_users">
+          <ManageUsers />
         </Route>
-        <Route path="/user_list">
-          <UserList />
+        <Route path="/manage_facilities">
+          <ManageFacilities />
         </Route>
         <Route path="/usage_fee">
           <UsageFee />

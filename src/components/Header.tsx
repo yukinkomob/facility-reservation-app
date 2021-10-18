@@ -56,21 +56,21 @@ function Header() {
             <li
               id="list-"
               className="nav-item nav-link list-unstyled link-primary cursor-pointer link-purple-color"
-              onClick={() => history.push('/create_user')}
+              onClick={() => history.push('/manage_users')}
               data-tip="ユーザ登録ページへ（管理者のみ）"
               aria-hidden
             >
-              <i className="fas fa-boxes" /> ユーザを登録
+              <i className="fas fa-boxes" /> ユーザを管理する
               <ReactTooltip effect="float" type="dark" place="bottom" />
             </li>
             <li
               id="list-"
               className="nav-item nav-link list-unstyled link-primary cursor-pointer link-purple-color"
-              onClick={() => history.push('/user_list')}
-              data-tip="予約一覧ページへ（管理者のみ）"
+              onClick={() => history.push('/manage_facilities')}
+              data-tip="施設管理ページへ（管理者のみ）"
               aria-hidden
             >
-              <i className="fas fa-hand-holding-heart" /> ユーザを見る
+              <i className="fas fa-hand-holding-heart" /> 施設を管理する
               <ReactTooltip effect="float" type="dark" place="bottom" />
             </li>
             <li

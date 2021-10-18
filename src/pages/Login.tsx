@@ -27,7 +27,7 @@ function Login() {
 
   function doLogin() {
     console.log('login')
-    history.push('/list')
+    history.push('/rsrv_list')
     // axios
     //   .post('https://raisetech-memo-api.herokuapp.com/api/login', body, {
     //     headers,
@@ -62,7 +62,22 @@ function Login() {
       >
         <Form>
           <div className="text-center mb-3">
-            <h3>予約サービス</h3>
+            <h3
+              data-tip="このページは下記の仕様を満たす必要があります。<br />
+              ・従業員は、社員IDとパスワード（本システム用）を用いてログインできるように<br />して欲しい。<br />
+              ・予約者、管理者、庶務係のログイン方法は同一とし、ログイン後のメニューで役<br />割毎の機能が選択できるようにして欲しい。<br />
+              "
+              data-for="title"
+            >
+              予約サービス
+              <ReactTooltip
+                id="title"
+                effect="float"
+                type="dark"
+                place="bottom"
+                multiline={true}
+              />
+            </h3>
           </div>
           <Form.Group controlId="formBasicEmail">
             <Form.Control
