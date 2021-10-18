@@ -10,14 +10,14 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route exact path="/">
-          <Login />
-        </Route>
         <Route path="/create">
           <CreateRsrv />
         </Route>
         <Route path="/list">
           <RsrvList />
+        </Route>
+        <Route exact path="/">
+          <Login />
         </Route>
       </Switch>
     </Router>

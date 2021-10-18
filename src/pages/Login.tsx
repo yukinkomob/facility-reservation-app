@@ -1,15 +1,18 @@
 import { useState } from 'react'
 // import axios from 'axios'
-
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { Container } from 'react-bootstrap'
 import ReactTooltip from 'react-tooltip'
+import { useHistory } from 'react-router'
+// import history from '../history'
 // import { useHistory } from 'react-router'
 
 function Login() {
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
+
+  const history = useHistory()
 
   // const history = useHistory()
 
@@ -22,8 +25,9 @@ function Login() {
   //   password,
   // }
 
-  function login() {
+  function doLogin() {
     console.log('login')
+    history.push('/list')
     // axios
     //   .post('https://raisetech-memo-api.herokuapp.com/api/login', body, {
     //     headers,
@@ -83,16 +87,18 @@ function Login() {
             variant="null"
             type="button"
             className="w-100 mb-2 btn btn-primary"
-            onClick={() => login()}
+            onClick={() => doLogin()}
+            data-tip="API: login(id, password)"
           >
             ログイン
+            <ReactTooltip effect="float" type="dark" place="bottom" />
           </Button>
           <Button
             variant="btn btn-outline-primary"
             type="button"
             className="w-100 mb-3"
             href="#"
-            data-tip="現在は非対応です…。"
+            data-tip="これは不要かも…。"
           >
             新規登録
             <ReactTooltip effect="float" type="dark" place="bottom" />
