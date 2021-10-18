@@ -148,7 +148,7 @@ const Header = () => (
               </li>
               <li>
                 <a
-                  className="dropdown-item link-purple-color"
+                  className="dropdown-item link-primary"
                   href="https://docs.google.com/document/d/1-kFU7rRkBtfA0IBggwJ2HuQGoURDMNoelnOfSnYKO_o/edit?usp=sharing"
                   data-tip="主にチャンネルでの情報をメモ（開発者）"
                 >
@@ -158,7 +158,7 @@ const Header = () => (
               </li>
               <li>
                 <a
-                  className="dropdown-item link-purple-color"
+                  className="dropdown-item link-primary"
                   href="https://drive.google.com/file/d/1mMyTRoarZ3Y-5BUZrI_eVyJYuUOmT9Ud/view?usp=sharing"
                   data-tip="配布された課題PDF（開発者）"
                 >
