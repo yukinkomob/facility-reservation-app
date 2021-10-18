@@ -47,14 +47,14 @@ function MakeRsrv() {
             aria-label="Default select example"
           >
             <option>施設を選択してください。</option>
-            <option value="1">2F小会議室A</option>
-            <option value="2">2F小会議室B</option>
-            <option value="3">2F中会議室C</option>
-            <option value="4">3F面談室D</option>
-            <option value="5">3F面談室E</option>
-            <option value="6">4F中会議室F</option>
-            <option value="7">4F大会議室G</option>
-            <option value="8">5F全体ホールH</option>
+            <option value="1">2F小会議室A (1,500 円 / 時間)</option>
+            <option value="2">2F小会議室B (1,500 円 / 時間)</option>
+            <option value="3">2F中会議室C (2,500 円 / 時間)</option>
+            <option value="4">3F面談室D (1,000 円 / 時間)</option>
+            <option value="5">3F面談室E (1,000 円 / 時間)</option>
+            <option value="6">4F中会議室F (2,500 円 / 時間)</option>
+            <option value="7">4F大会議室G (3,500 円 / 時間)</option>
+            <option value="8">5F全体ホールH (5,000 円 / 時間)</option>
           </Form.Select>
           <Form.Text>
             選択した施設の利用料金は、1時間あたり 1,500 円です。
