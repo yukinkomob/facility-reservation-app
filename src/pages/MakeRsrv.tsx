@@ -31,6 +31,7 @@ function MakeRsrv() {
           <Form.Select
             className="col-6 mt-3 mb-1"
             aria-label="Default select example"
+            data-tip="拠点情報はAPIで取得：getHubs()"
           >
             <option>拠点を選択してください。</option>
             <option value="1">横浜本社</option>
@@ -44,6 +45,7 @@ function MakeRsrv() {
           </Form.Select>
           <Form.Select
             className="col-6 mb-1"
+            data-tip="施設情報はAPIで取得：getHubs()で拠点と同時に取得するのが良いかも"
             aria-label="Default select example"
           >
             <option>施設を選択してください。</option>
@@ -56,13 +58,17 @@ function MakeRsrv() {
             <option value="7">4F大会議室G (3,500 円 / 時間)</option>
             <option value="8">5F全体ホールH (5,000 円 / 時間)</option>
           </Form.Select>
-          <Form.Text>
+          <Form.Text data-tip="ここの料金の部分は選択した施設の値を表示">
             選択した施設の利用料金は、1時間あたり 1,500 円です。
           </Form.Text>
           <Form.Control className="mt-3" type="text" placeholder="タイトル" />
           <Row className="align-items-center">
             <Col>
-              <Form.Label column lg={2}>
+              <Form.Label
+                column
+                lg={2}
+                data-tip="ピッカーUIを利用するのが良さそう"
+              >
                 予約開始日時
               </Form.Label>
             </Col>
@@ -174,7 +180,11 @@ function MakeRsrv() {
           </Row>
           <Row className="align-items-center">
             <Col>
-              <Form.Label column lg={2}>
+              <Form.Label
+                column
+                lg={2}
+                data-tip="日をまたいだ予約を可能とするか否かで、日付の実装有無が変わる"
+              >
                 予約終了日時
               </Form.Label>
             </Col>
@@ -284,11 +294,15 @@ function MakeRsrv() {
               </Form.Select>
             </Col>
           </Row>
-          <Form.Text>
+          <Form.Text data-tip="ここも入力内容から自動計算で処理する">
             選択した施設の利用料金は、〇時間のご利用で 計 〇〇〇 円です。
           </Form.Text>
           <br />
-          <Form.Label column="lg" lg={2}>
+          <Form.Label
+            column="lg"
+            lg={2}
+            data-tip="参加者情報はアカウントと紐づけるか？リマインダーなどは将来的にも不要？"
+          >
             参加者情報
           </Form.Label>
           <Row>
@@ -303,6 +317,7 @@ function MakeRsrv() {
                 className="mt-3 me-3"
                 variant="outline-secondary"
                 type="button"
+                data-tip="参加者データを追加"
               >
                 +
               </Button>
@@ -310,6 +325,7 @@ function MakeRsrv() {
                 className="mt-3"
                 variant="outline-secondary"
                 type="button"
+                data-tip="参加者データを削除"
               >
                 -
               </Button>
@@ -379,7 +395,12 @@ function MakeRsrv() {
         </Form>
         <Row className="align-items-center">
           <Col>
-            <Button className="col-6" variant="primary" type="submit">
+            <Button
+              className="col-6"
+              variant="primary"
+              type="submit"
+              data-tip="API: registerRsrv(...) を呼び出す"
+            >
               申　請
             </Button>
           </Col>

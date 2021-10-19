@@ -29,6 +29,7 @@ function RsrvList() {
         <Form>
           <Form.Select
             className="col-6 mt-3 mb-1"
+            data-tip="拠点情報はAPIで取得：getHubs()"
             aria-label="Default select example"
           >
             <option>拠点を選択してください。</option>
@@ -43,6 +44,7 @@ function RsrvList() {
           </Form.Select>
           <Form.Select
             className="col-6 mb-1"
+            data-tip="施設情報はAPIで取得：getHubs()で拠点と同時に取得するのが良いかも"
             aria-label="Default select example"
           >
             <option>施設を選択してください。</option>
@@ -57,7 +59,11 @@ function RsrvList() {
           </Form.Select>
           <Row className="align-items-center">
             <Col>
-              <Form.Label column lg={2}>
+              <Form.Label
+                column
+                lg={2}
+                data-tip="使いやすくするためには、週単位で表示や日送りのUIを追加など工夫が必要そう"
+              >
                 予約日
               </Form.Label>
             </Col>
@@ -134,16 +140,18 @@ function RsrvList() {
           </Row>
         </Form>
         <ListGroup className="mt-5">
-          <h3>〇年〇月〇日　〇〇拠点　〇〇室　予約一覧</h3>
-          <ListGroup.Item>
+          <h3 data-tip="変数がいっぱい並んでいて少し息苦しい（日付、拠点、施設）">
+            〇年〇月〇日　〇〇拠点　〇〇室　予約一覧
+          </h3>
+          <ListGroup.Item data-tip="クリックすると予約詳細画面に移行する。ダイアログでもいいかも...">
             <div>予約者：営業統括部本社営業部　中富太郎（090-2244-7755）</div>
             <div>予約時間帯：9:00-11:00</div>
           </ListGroup.Item>
-          <ListGroup.Item>
+          <ListGroup.Item data-tip="このリスト項目内に変更・削除ボタンを表示する？">
             <div>予約者：管理部　加藤次郎（090-1234-6644）</div>
             <div>予約時間帯：13:00-15:00</div>
           </ListGroup.Item>
-          <ListGroup.Item>
+          <ListGroup.Item data-tip="リストに表示する内容は要検討。そもそもリストでいいのかどうかも...">
             <div>予約者：システム部　玉出三郎（090-9089-0135）</div>
             <div>予約時間帯：19:00-21:00</div>
           </ListGroup.Item>
