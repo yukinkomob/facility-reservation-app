@@ -105,15 +105,14 @@ function Header() {
                   <i className="fas fa-hand-holding-heart" /> ログアウト
                   <ReactTooltip effect="float" type="dark" place="bottom" />
                 </li>
-                <li>
-                  <a
-                    className="dropdown-item link-purple-color"
-                    href="http://www.google.com/"
-                    data-tip="アカウント設定（全ユーザ）（不要かも）"
-                  >
-                    <i className="fas fa-cog" /> アカウント設定
-                    <ReactTooltip effect="float" type="dark" place="bottom" />
-                  </a>
+                <li
+                  className="dropdown-item link-primary cursor-pointer link-purple-color"
+                  onClick={() => history.push('/account')}
+                  data-tip="アカウント設定（全ユーザ）"
+                  aria-hidden
+                >
+                  <i className="fas fa-hand-holding-heart" /> アカウント設定
+                  <ReactTooltip effect="float" type="dark" place="bottom" />
                 </li>
                 <li>
                   <a

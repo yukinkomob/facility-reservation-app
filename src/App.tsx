@@ -8,6 +8,7 @@ import ManageFacilities from './pages/ManageFacilities'
 import UsageFee from './pages/UsageFee'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import RsrvDetail from 'pages/RsrvDetail'
+import Account from 'pages/Account'
 
 function App() {
   return (
@@ -30,6 +31,9 @@ function App() {
         </Route>
         <Route path="/usage_fee">
           <UsageFee />
+        </Route>
+        <Route path="/account">
+          <Account />
         </Route>
         <Route exact path="/">
           <Login />
