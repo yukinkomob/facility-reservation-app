@@ -69,7 +69,7 @@ function Login() {
               "
               data-for="title"
             >
-              <img width="140px" src="/logo.png" />
+              <img width="140px" src="/logo.png" alt="logo" />
               <ReactTooltip
                 id="title"
                 effect="float"
