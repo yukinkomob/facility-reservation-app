@@ -8,7 +8,7 @@ function Account() {
       <div className="main-top container">
         <h1
           data-tip="このページは下記の仕様を満たす必要があります。<br />
-          （仕様なし）
+          （仕様はなし）
           "
           data-for="title"
         >
