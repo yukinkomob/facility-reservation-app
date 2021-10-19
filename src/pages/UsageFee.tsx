@@ -1,4 +1,5 @@
 import Header from 'components/Header'
+import { Col, Form, ListGroup, Row } from 'react-bootstrap'
 import ReactTooltip from 'react-tooltip'
 
 function UsageFee() {
@@ -26,6 +27,146 @@ function UsageFee() {
             multiline={true}
           />
         </h1>
+        <Form>
+          <Row>
+            <Col>
+              <Form.Label column lg={2}>
+                閲覧年月
+              </Form.Label>
+            </Col>
+            <Col>
+              <Form.Select
+                className="col-6 mt-3 mb-1"
+                aria-label="Default select example"
+              >
+                <option>年</option>
+                <option value="2019">2019 年</option>
+                <option value="2020">2020 年</option>
+                <option value="2021">2021 年</option>
+                <option value="2022">2022 年</option>
+                <option value="2023">2023 年</option>
+              </Form.Select>
+            </Col>
+            <Col>
+              <Form.Select
+                className="col-6 mt-3 mb-1"
+                aria-label="Default select example"
+              >
+                <option>月</option>
+                <option value="1">1 月</option>
+                <option value="2">2 月</option>
+                <option value="3">3 月</option>
+                <option value="4">4 月</option>
+                <option value="5">5 月</option>
+                <option value="6">6 月</option>
+                <option value="7">7 月</option>
+                <option value="8">8 月</option>
+                <option value="9">9 月</option>
+                <option value="10">10 月</option>
+                <option value="11">11 月</option>
+                <option value="12">12 月</option>
+              </Form.Select>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Form.Label column lg={2}>
+                部署
+              </Form.Label>
+            </Col>
+            <Col>
+              <Col>
+                <Form.Select
+                  className="col-6 mt-3 mb-1"
+                  aria-label="Default select example"
+                >
+                  <option>部署を選択してください</option>
+                  <option value="株主総会">株主総会</option>
+                  <option value="取締役会">取締役会</option>
+                  <option value="社長室">社長室</option>
+                  <option value="営業統括部">営業統括部</option>
+                  <option value="営業統括部本社営業部">
+                    営業統括部本社営業部
+                  </option>
+                  <option value="営業統括部大阪営業部">
+                    営業統括部大阪営業部
+                  </option>
+                  <option value="営業統括部広島営業部">
+                    営業統括部広島営業部
+                  </option>
+                  <option value="営業統括部福岡営業部">
+                    営業統括部福岡営業部
+                  </option>
+                  <option value="営業統括部仙台営業部">
+                    営業統括部仙台営業部
+                  </option>
+                  <option value="営業統括部札幌営業部">
+                    営業統括部札幌営業部
+                  </option>
+                  <option value="営業統括部高松営業部">
+                    営業統括部高松営業部
+                  </option>
+                  <option value="営業統括部新潟営業部">
+                    営業統括部新潟営業部
+                  </option>
+                  <option value="監査部">監査部</option>
+                  <option value="管理部">管理部</option>
+                  <option value="業務支援部">業務支援部</option>
+                  <option value="システム部">システム部</option>
+                  <option value="経営企画部">経営企画部</option>
+                </Form.Select>
+              </Col>
+            </Col>
+          </Row>
+        </Form>
+        <ListGroup className="my-5">
+          <h3 className="my-3">利用料金総計：〇〇〇〇 円</h3>
+          <ListGroup.Item>
+            <div>拠点名：〇〇、施設名：〇〇、利用者名：〇〇 〇〇</div>
+            <div>利用時間帯：DD:DD～DD:DD</div>
+            <div>利用時間：〇時間〇分、利用料金：dddd 円</div>
+          </ListGroup.Item>
+          <ListGroup.Item>
+            <div>拠点名：〇〇、施設名：〇〇、利用者名：〇〇 〇〇</div>
+            <div>利用時間帯：DD:DD～DD:DD</div>
+            <div>利用時間：〇時間〇分、利用料金：dddd 円</div>
+          </ListGroup.Item>
+          <ListGroup.Item>
+            <div>拠点名：〇〇、施設名：〇〇、利用者名：〇〇 〇〇</div>
+            <div>利用時間帯：DD:DD～DD:DD</div>
+            <div>利用時間：〇時間〇分、利用料金：dddd 円</div>
+          </ListGroup.Item>
+          <ListGroup.Item>
+            <div>拠点名：〇〇、施設名：〇〇、利用者名：〇〇 〇〇</div>
+            <div>利用時間帯：DD:DD～DD:DD</div>
+            <div>利用時間：〇時間〇分、利用料金：dddd 円</div>
+          </ListGroup.Item>
+          <ListGroup.Item>
+            <div>拠点名：〇〇、施設名：〇〇、利用者名：〇〇 〇〇</div>
+            <div>利用時間帯：DD:DD～DD:DD</div>
+            <div>利用時間：〇時間〇分、利用料金：dddd 円</div>
+          </ListGroup.Item>
+          <ListGroup.Item>
+            <div>拠点名：〇〇、施設名：〇〇、利用者名：〇〇 〇〇</div>
+            <div>利用時間帯：DD:DD～DD:DD</div>
+            <div>利用時間：〇時間〇分、利用料金：dddd 円</div>
+          </ListGroup.Item>
+          <ListGroup.Item>
+            <div>拠点名：〇〇、施設名：〇〇、利用者名：〇〇 〇〇</div>
+            <div>利用時間帯：DD:DD～DD:DD</div>
+            <div>利用時間：〇時間〇分、利用料金：dddd 円</div>
+          </ListGroup.Item>
+          <ListGroup.Item>
+            <div>拠点名：〇〇、施設名：〇〇、利用者名：〇〇 〇〇</div>
+            <div>利用時間帯：DD:DD～DD:DD</div>
+            <div>利用時間：〇時間〇分、利用料金：dddd 円</div>
+          </ListGroup.Item>
+          <ListGroup.Item>
+            <div>拠点名：〇〇、施設名：〇〇、利用者名：〇〇 〇〇</div>
+            <div>利用時間帯：DD:DD～DD:DD</div>
+            <div>利用時間：〇時間〇分、利用料金：dddd 円</div>
+          </ListGroup.Item>
+        </ListGroup>
       </div>
     </div>
   )
