@@ -81,9 +81,9 @@ function Login() {
           </div>
           <Form.Group controlId="formBasicEmail">
             <Form.Control
-              type="email"
+              type="text"
               className="rounded-0 rounded-top border-bottom-0"
-              placeholder="メールアドレス"
+              placeholder="社員ID"
               value={email}
               onChange={(e: any) => changeEmail(e)}
             />
