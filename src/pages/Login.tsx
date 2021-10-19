@@ -69,7 +69,7 @@ function Login() {
               "
               data-for="title"
             >
-              予約サービス
+              <img width="140px" src="/logo.png" />
               <ReactTooltip
                 id="title"
                 effect="float"

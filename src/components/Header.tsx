@@ -231,6 +231,60 @@ function Header() {
                 <li>
                   <hr className="dropdown-divider" />
                 </li>
+                <h6 className="dropdown-header">モデリング資料</h6>
+                <li>
+                  <a
+                    className="dropdown-item link-purple-color"
+                    href="http://www.google.com/"
+                    data-tip="ユースケースを整理（開発者）"
+                  >
+                    <i className="fas fa-laptop" /> ユースケース図
+                    <ReactTooltip effect="float" type="dark" place="bottom" />
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="dropdown-item link-purple-color"
+                    href="http://www.google.com/"
+                    data-tip="クラス構成を整理（開発者）"
+                  >
+                    <i className="fas fa-laptop" /> クラス図
+                    <ReactTooltip effect="float" type="dark" place="bottom" />
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="dropdown-item link-purple-color"
+                    href="http://www.google.com/"
+                    data-tip="オブジェクト構成を整理（開発者）"
+                  >
+                    <i className="fas fa-laptop" /> オブジェクト図
+                    <ReactTooltip effect="float" type="dark" place="bottom" />
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="dropdown-item link-purple-color"
+                    href="http://www.google.com/"
+                    data-tip="状態遷移を整理（開発者）"
+                  >
+                    <i className="fas fa-laptop" /> ステートマシン図
+                    <ReactTooltip effect="float" type="dark" place="bottom" />
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="dropdown-item link-purple-color"
+                    href="http://www.google.com/"
+                    data-tip="クラス間のメッセージ応答を整理（開発者）"
+                  >
+                    <i className="fas fa-laptop" /> シーケンス図
+                    <ReactTooltip effect="float" type="dark" place="bottom" />
+                  </a>
+                </li>
+                <li>
+                  <hr className="dropdown-divider" />
+                </li>
                 <h6 className="dropdown-header">実装資料</h6>
                 <li>
                   <a
