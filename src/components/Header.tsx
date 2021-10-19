@@ -96,15 +96,14 @@ function Header() {
                 <ReactTooltip effect="float" type="dark" place="bottom" />
               </a>
               <ul className="dropdown-menu" aria-labelledby="dropdown01">
-                <li>
-                  <a
-                    className="dropdown-item link-purple-color"
-                    href="http://www.google.com/"
-                    data-tip="ログアウト（全ユーザ）"
-                  >
-                    <i className="fas fa-sign-out-alt" /> ログアウト
-                    <ReactTooltip effect="float" type="dark" place="bottom" />
-                  </a>
+                <li
+                  className="dropdown-item link-primary cursor-pointer link-purple-color"
+                  onClick={() => history.push('/')}
+                  data-tip="ログアウト（全ユーザ）"
+                  aria-hidden
+                >
+                  <i className="fas fa-hand-holding-heart" /> ログアウト
+                  <ReactTooltip effect="float" type="dark" place="bottom" />
                 </li>
                 <li>
                   <a
