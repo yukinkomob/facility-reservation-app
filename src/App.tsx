@@ -7,6 +7,7 @@ import ManageUsers from './pages/ManageUsers'
 import ManageFacilities from './pages/ManageFacilities'
 import UsageFee from './pages/UsageFee'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import RsrvDetail from 'pages/RsrvDetail'
 
 function App() {
   return (
@@ -17,6 +18,9 @@ function App() {
         </Route>
         <Route path="/rsrv_list">
           <RsrvList />
+        </Route>
+        <Route path="/rsrv_detail">
+          <RsrvDetail />
         </Route>
         <Route path="/manage_users">
           <ManageUsers />
