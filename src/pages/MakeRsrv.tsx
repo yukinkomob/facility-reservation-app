@@ -62,6 +62,24 @@ function MakeRsrv() {
             選択した施設の利用料金は、1時間あたり 1,500 円です。
           </Form.Text>
           <Form.Control className="mt-3" type="text" placeholder="タイトル" />
+          <Row>
+            <Col>
+              <Form.Label
+                column
+                lg={2}
+                data-tip="電話番号は場合により変わる可能性があるので、毎回入力。予約者名はアカウント情報から抽出するので不要"
+              >
+                予約者電話番号
+              </Form.Label>
+            </Col>
+            <Col>
+              <Form.Control
+                className="mt-3"
+                type="tel"
+                placeholder="電話番号"
+              />
+            </Col>
+          </Row>
           <Row className="align-items-center">
             <Col>
               <Form.Label
@@ -393,7 +411,7 @@ function MakeRsrv() {
             <Form.Control as="textarea" rows={3} />
           </Form.Group>
         </Form>
-        <Row className="align-items-center">
+        <Row className="align-items-center mb-5">
           <Col>
             <Button
               className="col-6"

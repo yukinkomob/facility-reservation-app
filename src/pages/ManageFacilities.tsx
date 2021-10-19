@@ -48,7 +48,7 @@ function ManageFacilities() {
         </Form>
         <Button
           className="col-6 mt-5"
-          variant="primary"
+          variant="outline-success"
           type="submit"
           data-tip="API: registerRsrv(...) を呼び出す"
         >
