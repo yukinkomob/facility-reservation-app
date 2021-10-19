@@ -67,7 +67,7 @@ function MakeRsrv() {
               <Form.Label
                 column
                 lg={2}
-                data-tip="ピッカーUIを利用するのが良さそう"
+                data-tip="ピッカーUIを利用するのが良さそう。利用可能時間帯や連続利用可能時間を考慮する必要がある"
               >
                 予約開始日時
               </Form.Label>
