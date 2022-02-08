@@ -1,5 +1,5 @@
 import { useState } from 'react'
-// import axios from 'axios'
+import axios from 'axios'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { Container } from 'react-bootstrap'
@@ -16,32 +16,32 @@ function Login() {
 
   // const history = useHistory()
 
-  // const headers = {
-  //   'Content-Type': 'application/json',
-  // }
+  const headers = {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': 'facility-reserve-api.vercel.app',
+  }
 
-  // const body = {
-  //   email,
-  //   password,
-  // }
+  const body = {
+    employee_id: email,
+    password,
+  }
 
   function doLogin() {
     console.log('login')
-    history.push('/rsrv_list')
-    // axios
-    //   .post('https://raisetech-memo-api.herokuapp.com/api/login', body, {
-    //     headers,
-    //   })
-    //   .then((res) => {
-    //     console.log(res)
-    //     const { data } = res
-    //     console.log('token', data.access_token)
-    //     localStorage.setItem('token', data.access_token)
-    //     history.push('/Edit')
-    //   })
-    //   .catch((e) => {
-    //     console.log(e)
-    //   })
+    axios
+      .post('https://desolate-gorge-20881.herokuapp.com/api/login', body, {
+        headers,
+      })
+      .then((res) => {
+        console.log(res)
+        const { data } = res
+        console.log('token', data.access_token)
+        localStorage.setItem('token', data.access_token)
+        history.push('/rsrv_list')
+      })
+      .catch((e) => {
+        console.log(e)
+      })
   }
 
   function changeEmail(e: any) {
