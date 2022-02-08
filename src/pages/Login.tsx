@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import axios from 'axios'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
@@ -26,22 +26,32 @@ function Login() {
     password,
   }
 
+  const callApi = useCallback(
+    (path: string, headers: any, body: any, callback: any) => {
+      const url = 'https://desolate-gorge-20881.herokuapp.com/api' + path
+      axios
+        .post(url, body, {
+          headers,
+        })
+        .then((res) => {
+          callback(res)
+        })
+        .catch((e) => {
+          console.log(e)
+        })
+    },
+    [],
+  )
+
   function doLogin() {
     console.log('login')
-    axios
-      .post('https://desolate-gorge-20881.herokuapp.com/api/login', body, {
-        headers,
-      })
-      .then((res) => {
-        console.log(res)
-        const { data } = res
-        console.log('token', data.access_token)
-        localStorage.setItem('token', data.access_token)
-        history.push('/rsrv_list')
-      })
-      .catch((e) => {
-        console.log(e)
-      })
+    callApi('/login', headers, body, (res: any) => {
+      console.log(res)
+      const { data } = res
+      console.log('token', data.access_token)
+      localStorage.setItem('token', data.access_token)
+      history.push('/rsrv_list')
+    })
   }
 
   function changeEmail(e: any) {
