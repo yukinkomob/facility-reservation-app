@@ -1,8 +1,56 @@
 import Header from 'components/Header'
 import { Form, ListGroup } from 'react-bootstrap'
 import ReactTooltip from 'react-tooltip'
+import axios from 'axios'
+import { useState, useCallback, useEffect } from 'react'
+
+interface Account {
+  employee_id: number
+  name: string
+  furigana: string
+  hub_id: number
+  department_id: number
+  tel: string
+  email: string
+  role_id: number
+}
+
+const headers = {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': 'facility-reserve-api.vercel.app',
+  Authorization: 'Bearer ' + localStorage.getItem('token'),
+}
 
 function ManageUsers() {
+  const [accounts, setAccounts] = useState<Array<Account>>()
+
+  const callApiGet = useCallback(
+    (path: string, headers: any, callback: any) => {
+      const url = 'https://desolate-gorge-20881.herokuapp.com/api' + path
+      axios
+        .get(url, {
+          headers,
+        })
+        .then((res) => {
+          callback(res)
+        })
+        .catch((e) => {
+          console.log(e)
+        })
+    },
+    [],
+  )
+
+  useEffect(() => {
+    callApiGet('/account', headers, (res: any) => {
+      const accountList = new Array<Account>()
+      for (const key in res.data) {
+        accountList.push(res.data[key])
+      }
+      setAccounts(accountList)
+    })
+  }, [])
+
   return (
     <div>
       <Header />
@@ -33,7 +81,23 @@ function ManageUsers() {
           />
         </Form>
         <ListGroup className="mt-5 mb-5">
-          <ListGroup.Item>
+          {accounts &&
+            accounts.map((account: any) => {
+              return (
+                <ListGroup.Item>
+                  <div>
+                    ID: {account.employee_id} {account.name}
+                  </div>
+                  <div>拠点: 横浜本社、所属: 社長室、役割: 管理者</div>
+                  <div>
+                    TEL: {account.tel}、Email: {account.email}
+                  </div>
+                </ListGroup.Item>
+              )
+            })}
+
+          {/*
+             <ListGroup.Item>
             <div>ID: 0001　中富 太郎</div>
             <div>拠点：横浜本社、所属：社長室、役割：管理者</div>
             <div>TEL：080-3344-8876、Email：t.nakatomi@nakatomi-trade.com</div>
@@ -54,57 +118,8 @@ function ManageUsers() {
             <div>ID: 0004　根本 真夫</div>
             <div>拠点：横浜本社、所属：営業統括部、役割：一般ユーザ</div>
             <div>TEL：080-3443-8953、Email：k.masuda@nakatomi-trade.com</div>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <div>ID: 0004　根本 真夫</div>
-            <div>拠点：横浜本社、所属：営業統括部、役割：一般ユーザ</div>
-            <div>TEL：080-3443-8953、Email：k.masuda@nakatomi-trade.com</div>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <div>ID: 0004　根本 真夫</div>
-            <div>拠点：横浜本社、所属：営業統括部、役割：一般ユーザ</div>
-            <div>TEL：080-3443-8953、Email：k.masuda@nakatomi-trade.com</div>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <div>ID: 0004　根本 真夫</div>
-            <div>拠点：横浜本社、所属：営業統括部、役割：一般ユーザ</div>
-            <div>TEL：080-3443-8953、Email：k.masuda@nakatomi-trade.com</div>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <div>ID: 0004　根本 真夫</div>
-            <div>拠点：横浜本社、所属：営業統括部、役割：一般ユーザ</div>
-            <div>TEL：080-3443-8953、Email：k.masuda@nakatomi-trade.com</div>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <div>ID: 0004　根本 真夫</div>
-            <div>拠点：横浜本社、所属：営業統括部、役割：一般ユーザ</div>
-            <div>TEL：080-3443-8953、Email：k.masuda@nakatomi-trade.com</div>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <div>ID: 0004　根本 真夫</div>
-            <div>拠点：横浜本社、所属：営業統括部、役割：一般ユーザ</div>
-            <div>TEL：080-3443-8953、Email：k.masuda@nakatomi-trade.com</div>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <div>ID: 0004　根本 真夫</div>
-            <div>拠点：横浜本社、所属：営業統括部、役割：一般ユーザ</div>
-            <div>TEL：080-3443-8953、Email：k.masuda@nakatomi-trade.com</div>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <div>ID: 0004　根本 真夫</div>
-            <div>拠点：横浜本社、所属：営業統括部、役割：一般ユーザ</div>
-            <div>TEL：080-3443-8953、Email：k.masuda@nakatomi-trade.com</div>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <div>ID: 0004　根本 真夫</div>
-            <div>拠点：横浜本社、所属：営業統括部、役割：一般ユーザ</div>
-            <div>TEL：080-3443-8953、Email：k.masuda@nakatomi-trade.com</div>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <div>ID: 0004　根本 真夫</div>
-            <div>拠点：横浜本社、所属：営業統括部、役割：一般ユーザ</div>
-            <div>TEL：080-3443-8953、Email：k.masuda@nakatomi-trade.com</div>
-          </ListGroup.Item>
+            </ListGroup.Item> 
+          */}
         </ListGroup>
       </div>
     </div>
