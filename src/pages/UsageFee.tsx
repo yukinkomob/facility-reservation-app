@@ -1,8 +1,137 @@
+// @ts-nocheck
 import Header from 'components/Header'
+import { useState, useEffect, useCallback } from 'react'
 import { Col, Form, ListGroup, Row } from 'react-bootstrap'
 import ReactTooltip from 'react-tooltip'
+import axios from 'axios'
+
+interface Hub {
+  id: number
+  name: string
+}
+
+interface Department {
+  id: number
+  name: string
+  hub_id: number
+}
+
+const headers = {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': 'desolate-gorge-20881.herokuapp.com',
+  Authorization: 'Bearer ' + localStorage.getItem('token'),
+}
+
+const INVALID_ID = -1
 
 function UsageFee() {
+  const [hubs, setHubs] = useState<Array<Hub>>()
+  const [departments, setDepartments] = useState<Array<Department>>()
+  const [currentHub, setCurrentHub] = useState<number>(INVALID_ID)
+  const [currentDepartment, setCurrentDepartment] = useState<number>(INVALID_ID)
+  const [currentYear, setCurrentYear] = useState<string>('')
+  const [currentMonth, setCurrentMonth] = useState<string>('')
+
+  const callApiGet = useCallback(
+    (path: string, headers: any, callback: any) => {
+      const url = 'https://desolate-gorge-20881.herokuapp.com/api' + path
+      axios
+        .get(url, {
+          headers,
+        })
+        .then((res) => {
+          callback(res)
+        })
+        .catch((e) => {
+          console.log(e)
+        })
+    },
+    [],
+  )
+
+  const callApiPost = useCallback(
+    (path: string, headers: any, body: any, callback: any) => {
+      const url = 'https://desolate-gorge-20881.herokuapp.com/api' + path
+      axios
+        .post(url, body, {
+          headers,
+        })
+        .then((res) => {
+          callback(res)
+        })
+        .catch((e) => {
+          console.log(e)
+        })
+    },
+    [],
+  )
+
+  useEffect(() => {
+    // 拠点を取得
+    callApiGet('/hub', headers, (res: any) => {
+      const HubList = new Array<Hub>()
+      console.log('hub', res.data)
+      for (const key in res.data) {
+        HubList.push(res.data[key])
+      }
+      setHubs(HubList)
+    })
+  }, [])
+
+  useEffect(() => {
+    // 部署を取得
+    callApiGet('/department/' + currentHub, headers, (res: any) => {
+      const departmentList = new Array<Department>()
+      console.log('department', res.data)
+      for (const key in res.data) {
+        departmentList.push(res.data[key])
+      }
+      setDepartments(departmentList)
+    })
+  }, [currentHub])
+
+  useEffect(() => {
+    if (
+      currentYear !== '' &&
+      currentMonth !== '' &&
+      currentDepartment !== INVALID_ID
+    ) {
+      // TODO /api/usage_fee_month を呼び出す
+      callApiPost(
+        '/usage_fee_month',
+        headers,
+        {
+          year: currentYear,
+          month: currentMonth,
+          department_id: currentDepartment,
+        },
+        (res: any) => {
+          console.log('data:', res.data)
+        },
+      )
+    }
+  }, [currentYear, currentMonth, currentDepartment])
+
+  function changeHub(event: any) {
+    console.log('hub', event.currentTarget.value)
+    setCurrentHub(event.currentTarget.value)
+  }
+
+  function changeDepartment(event: any) {
+    console.log('department', event.currentTarget.value)
+    setCurrentDepartment(event.currentTarget.value)
+  }
+
+  function changeYear(event: any) {
+    console.log('year', event.currentTarget.value)
+    setCurrentYear(event.currentTarget.value)
+  }
+
+  function changeMonth(event: any) {
+    console.log('month', event.currentTarget.value)
+    setCurrentMonth(event.currentTarget.value)
+  }
+
   return (
     <div>
       <Header />
@@ -38,6 +167,7 @@ function UsageFee() {
               <Form.Select
                 className="col-6 mt-3 mb-1"
                 aria-label="Default select example"
+                onChange={changeYear}
               >
                 <option>年</option>
                 <option value="2019">2019 年</option>
@@ -51,20 +181,41 @@ function UsageFee() {
               <Form.Select
                 className="col-6 mt-3 mb-1"
                 aria-label="Default select example"
+                onChange={changeMonth}
               >
                 <option>月</option>
-                <option value="1">1 月</option>
-                <option value="2">2 月</option>
-                <option value="3">3 月</option>
-                <option value="4">4 月</option>
-                <option value="5">5 月</option>
-                <option value="6">6 月</option>
-                <option value="7">7 月</option>
-                <option value="8">8 月</option>
-                <option value="9">9 月</option>
+                <option value="01">1 月</option>
+                <option value="02">2 月</option>
+                <option value="03">3 月</option>
+                <option value="04">4 月</option>
+                <option value="05">5 月</option>
+                <option value="06">6 月</option>
+                <option value="07">7 月</option>
+                <option value="08">8 月</option>
+                <option value="09">9 月</option>
                 <option value="10">10 月</option>
                 <option value="11">11 月</option>
                 <option value="12">12 月</option>
+              </Form.Select>
+            </Col>
+          </Row>
+          <Row>
+            <Col>拠点</Col>
+            <Col>
+              <Form.Select
+                className="col-6 mt-3 mb-1"
+                aria-label="Default select example"
+                onChange={changeHub}
+              >
+                <option>拠点を選択してください</option>
+                {hubs &&
+                  hubs.map((hub) => {
+                    return (
+                      <option key={hub.id} value={hub.id}>
+                        {hub.name}
+                      </option>
+                    )
+                  })}
               </Form.Select>
             </Col>
           </Row>
@@ -79,41 +230,17 @@ function UsageFee() {
                 <Form.Select
                   className="col-6 mt-3 mb-1"
                   aria-label="Default select example"
+                  onChange={changeDepartment}
                 >
                   <option>部署を選択してください</option>
-                  <option value="株主総会">株主総会</option>
-                  <option value="取締役会">取締役会</option>
-                  <option value="社長室">社長室</option>
-                  <option value="営業統括部">営業統括部</option>
-                  <option value="営業統括部本社営業部">
-                    営業統括部本社営業部
-                  </option>
-                  <option value="営業統括部大阪営業部">
-                    営業統括部大阪営業部
-                  </option>
-                  <option value="営業統括部広島営業部">
-                    営業統括部広島営業部
-                  </option>
-                  <option value="営業統括部福岡営業部">
-                    営業統括部福岡営業部
-                  </option>
-                  <option value="営業統括部仙台営業部">
-                    営業統括部仙台営業部
-                  </option>
-                  <option value="営業統括部札幌営業部">
-                    営業統括部札幌営業部
-                  </option>
-                  <option value="営業統括部高松営業部">
-                    営業統括部高松営業部
-                  </option>
-                  <option value="営業統括部新潟営業部">
-                    営業統括部新潟営業部
-                  </option>
-                  <option value="監査部">監査部</option>
-                  <option value="管理部">管理部</option>
-                  <option value="業務支援部">業務支援部</option>
-                  <option value="システム部">システム部</option>
-                  <option value="経営企画部">経営企画部</option>
+                  {departments &&
+                    departments?.map((department) => {
+                      return (
+                        <option key={department.id} value={department.id}>
+                          {department.name}
+                        </option>
+                      )
+                    })}
                 </Form.Select>
               </Col>
             </Col>
@@ -121,46 +248,6 @@ function UsageFee() {
         </Form>
         <ListGroup className="my-5">
           <h3 className="my-3">利用料金総計：〇〇〇〇 円</h3>
-          <ListGroup.Item>
-            <div>拠点名：〇〇、施設名：〇〇、利用者名：〇〇 〇〇</div>
-            <div>利用時間帯：DD:DD～DD:DD</div>
-            <div>利用時間：〇時間〇分、利用料金：dddd 円</div>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <div>拠点名：〇〇、施設名：〇〇、利用者名：〇〇 〇〇</div>
-            <div>利用時間帯：DD:DD～DD:DD</div>
-            <div>利用時間：〇時間〇分、利用料金：dddd 円</div>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <div>拠点名：〇〇、施設名：〇〇、利用者名：〇〇 〇〇</div>
-            <div>利用時間帯：DD:DD～DD:DD</div>
-            <div>利用時間：〇時間〇分、利用料金：dddd 円</div>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <div>拠点名：〇〇、施設名：〇〇、利用者名：〇〇 〇〇</div>
-            <div>利用時間帯：DD:DD～DD:DD</div>
-            <div>利用時間：〇時間〇分、利用料金：dddd 円</div>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <div>拠点名：〇〇、施設名：〇〇、利用者名：〇〇 〇〇</div>
-            <div>利用時間帯：DD:DD～DD:DD</div>
-            <div>利用時間：〇時間〇分、利用料金：dddd 円</div>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <div>拠点名：〇〇、施設名：〇〇、利用者名：〇〇 〇〇</div>
-            <div>利用時間帯：DD:DD～DD:DD</div>
-            <div>利用時間：〇時間〇分、利用料金：dddd 円</div>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <div>拠点名：〇〇、施設名：〇〇、利用者名：〇〇 〇〇</div>
-            <div>利用時間帯：DD:DD～DD:DD</div>
-            <div>利用時間：〇時間〇分、利用料金：dddd 円</div>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <div>拠点名：〇〇、施設名：〇〇、利用者名：〇〇 〇〇</div>
-            <div>利用時間帯：DD:DD～DD:DD</div>
-            <div>利用時間：〇時間〇分、利用料金：dddd 円</div>
-          </ListGroup.Item>
           <ListGroup.Item>
             <div>拠点名：〇〇、施設名：〇〇、利用者名：〇〇 〇〇</div>
             <div>利用時間帯：DD:DD～DD:DD</div>
