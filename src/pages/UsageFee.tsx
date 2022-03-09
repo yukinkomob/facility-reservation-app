@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { Col, Form, ListGroup, Row } from 'react-bootstrap'
 import ReactTooltip from 'react-tooltip'
 import { callApiGet, callApiPost } from 'common/ApiWrapper'
+import { INVALID_ID } from 'common/Constants'
 
 interface Hub {
   id: number
@@ -30,8 +31,6 @@ const headers = {
   'Access-Control-Allow-Origin': 'desolate-gorge-20881.herokuapp.com',
   Authorization: 'Bearer ' + localStorage.getItem('token'),
 }
-
-const INVALID_ID = -1
 
 function UsageFee() {
   const [hubs, setHubs] = useState<Array<Hub>>()
@@ -72,7 +71,6 @@ function UsageFee() {
       currentMonth !== '' &&
       currentDepartment !== INVALID_ID
     ) {
-      // TODO /api/usage_fee_month を呼び出す
       callApiPost(
         '/usage_fee_month',
         headers,

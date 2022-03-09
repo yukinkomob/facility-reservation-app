@@ -1,8 +1,40 @@
+// @ts-nocheck
 import Header from 'components/Header'
+import { useState, useEffect } from 'react'
 import { Col, Form, ListGroup, Row } from 'react-bootstrap'
 import ReactTooltip from 'react-tooltip'
+import { defaultHeaders, callApiGet } from 'common/ApiWrapper'
+import { INVALID_ID } from 'common/Constants'
 
 function RsrvList() {
+  const [hubs, setHubs] = useState<Array<Hub>>()
+  const [departments, setDepartments] = useState<Array<Department>>()
+  const [currentHub, setCurrentHub] = useState<number>(INVALID_ID)
+
+  useEffect(() => {
+    // 拠点を取得
+    callApiGet('/hub', defaultHeaders, (res: any) => {
+      const HubList = new Array<Hub>()
+      console.log('hub', res.data)
+      for (const key in res.data) {
+        HubList.push(res.data[key])
+      }
+      setHubs(HubList)
+    })
+  }, [])
+
+  useEffect(() => {
+    // 部署を取得
+    callApiGet('/department/' + currentHub, defaultHeaders, (res: any) => {
+      const departmentList = new Array<Department>()
+      console.log('department', res.data)
+      for (const key in res.data) {
+        departmentList.push(res.data[key])
+      }
+      setDepartments(departmentList)
+    })
+  }, [currentHub])
+
   return (
     <div>
       <Header />

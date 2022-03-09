@@ -2,7 +2,7 @@ import Header from 'components/Header'
 import { Form, ListGroup } from 'react-bootstrap'
 import ReactTooltip from 'react-tooltip'
 import { useState, useEffect } from 'react'
-import { callApiGet } from 'common/ApiWrapper'
+import { defaultHeaders, callApiGet } from 'common/ApiWrapper'
 
 interface Account {
   employee_id: number
@@ -15,17 +15,11 @@ interface Account {
   role_id: number
 }
 
-const headers = {
-  'Content-Type': 'application/json',
-  'Access-Control-Allow-Origin': 'facility-reserve-api.vercel.app',
-  Authorization: 'Bearer ' + localStorage.getItem('token'),
-}
-
 function ManageUsers() {
   const [accounts, setAccounts] = useState<Array<Account>>()
 
   useEffect(() => {
-    callApiGet('/account', headers, (res: any) => {
+    callApiGet('/account', defaultHeaders, (res: any) => {
       const accountList = new Array<Account>()
       for (const key in res.data) {
         accountList.push(res.data[key])

@@ -1,6 +1,12 @@
 import axios from 'axios'
 import { domain } from 'common/Constants'
 
+export const defaultHeaders = {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': 'desolate-gorge-20881.herokuapp.com',
+  Authorization: 'Bearer ' + localStorage.getItem('token'),
+}
+
 export function callApiGet(path: string, headers: any, callback: any) {
   const url = domain + '/api' + path
   axios
