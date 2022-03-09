@@ -3,6 +3,7 @@ import { Form, ListGroup } from 'react-bootstrap'
 import ReactTooltip from 'react-tooltip'
 import axios from 'axios'
 import { useState, useCallback, useEffect } from 'react'
+import { domain } from 'common/constants'
 
 interface Account {
   employee_id: number
@@ -26,7 +27,7 @@ function ManageUsers() {
 
   const callApiGet = useCallback(
     (path: string, headers: any, callback: any) => {
-      const url = 'https://desolate-gorge-20881.herokuapp.com/api' + path
+      const url = domain + '/api' + path
       axios
         .get(url, {
           headers,

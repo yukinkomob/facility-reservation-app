@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { Col, Form, ListGroup, Row } from 'react-bootstrap'
 import ReactTooltip from 'react-tooltip'
 import axios from 'axios'
+import { domain } from 'common/constants'
 
 interface Hub {
   id: number
@@ -44,7 +45,7 @@ function UsageFee() {
 
   const callApiGet = useCallback(
     (path: string, headers: any, callback: any) => {
-      const url = 'https://desolate-gorge-20881.herokuapp.com/api' + path
+      const url = domain + '/api' + path
       axios
         .get(url, {
           headers,
@@ -61,7 +62,7 @@ function UsageFee() {
 
   const callApiPost = useCallback(
     (path: string, headers: any, body: any, callback: any) => {
-      const url = 'https://desolate-gorge-20881.herokuapp.com/api' + path
+      const url = domain + '/api' + path
       axios
         .post(url, body, {
           headers,
