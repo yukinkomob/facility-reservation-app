@@ -1,4 +1,3 @@
-// @ts-nocheck
 import Header from 'components/Header'
 import { useState, useEffect, useCallback } from 'react'
 import { Col, Form, ListGroup, Row } from 'react-bootstrap'
@@ -16,6 +15,16 @@ interface Department {
   hub_id: number
 }
 
+type UsageFeeData = {
+  date: string
+  reservation_person_id: number
+  time: string
+  fee: number
+  account_name: string
+  facility_name: string
+  hub_name: string
+}
+
 const headers = {
   'Content-Type': 'application/json',
   'Access-Control-Allow-Origin': 'desolate-gorge-20881.herokuapp.com',
@@ -31,6 +40,7 @@ function UsageFee() {
   const [currentDepartment, setCurrentDepartment] = useState<number>(INVALID_ID)
   const [currentYear, setCurrentYear] = useState<string>('')
   const [currentMonth, setCurrentMonth] = useState<string>('')
+  const [usageFees, setUsageFees] = useState<Array<UsageFeeData>>()
 
   const callApiGet = useCallback(
     (path: string, headers: any, callback: any) => {
@@ -107,6 +117,20 @@ function UsageFee() {
         },
         (res: any) => {
           console.log('data:', res.data)
+          // TODO データを取得し、確保
+          if (res.data === null && Object.keys(res.data).length === 0) {
+            console.log('UsageFee データの取得に失敗')
+            return
+          }
+          const items: Array<UsageFeeData> = new Array(
+            Object.keys(res.data).length,
+          )
+          for (let key in res.data) {
+            console.log('key=' + key)
+            console.log(res.data[key])
+            items.push(res.data[key])
+          }
+          setUsageFees(items)
         },
       )
     }
@@ -130,6 +154,21 @@ function UsageFee() {
   function changeMonth(event: any) {
     console.log('month', event.currentTarget.value)
     setCurrentMonth(event.currentTarget.value)
+  }
+
+  function getSumData(): string {
+    if (
+      usageFees === undefined ||
+      usageFees === null ||
+      usageFees?.length <= 0
+    ) {
+      console.log('計算対象のデータがありません。')
+      return ''
+    }
+    const sum = (usageFees as Array<UsageFeeData>).reduce((accum, item) => {
+      return accum + item.fee
+    }, 0)
+    return sum.toString()
   }
 
   return (
@@ -247,12 +286,21 @@ function UsageFee() {
           </Row>
         </Form>
         <ListGroup className="my-5">
-          <h3 className="my-3">利用料金総計：〇〇〇〇 円</h3>
-          <ListGroup.Item>
-            <div>拠点名：〇〇、施設名：〇〇、利用者名：〇〇 〇〇</div>
-            <div>利用時間帯：DD:DD～DD:DD</div>
-            <div>利用時間：〇時間〇分、利用料金：dddd 円</div>
-          </ListGroup.Item>
+          <h3 className="my-3">利用料金総計: {getSumData()} 円</h3>
+          {usageFees?.map((item) => {
+            return (
+              <ListGroup.Item>
+                <div>
+                  拠点名: {item.hub_name}、施設名: {item.facility_name}
+                  、利用者名: no data{' '}
+                </div>
+                <div>利用日: {item.date}</div>
+                <div>
+                  利用時間: {item.time} 、利用料金: {item.fee} 円
+                </div>
+              </ListGroup.Item>
+            )
+          })}
         </ListGroup>
       </div>
     </div>
