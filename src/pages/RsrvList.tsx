@@ -8,7 +8,7 @@ import { INVALID_ID } from 'common/Constants'
 
 function RsrvList() {
   const [hubs, setHubs] = useState<Array<Hub>>()
-  const [departments, setDepartments] = useState<Array<Department>>()
+  const [facilities, setFacilities] = useState<Array<Facility>>()
   const [currentHub, setCurrentHub] = useState<number>(INVALID_ID)
 
   useEffect(() => {
@@ -25,15 +25,20 @@ function RsrvList() {
 
   useEffect(() => {
     // 部署を取得
-    callApiGet('/department/' + currentHub, defaultHeaders, (res: any) => {
-      const departmentList = new Array<Department>()
-      console.log('department', res.data)
+    callApiGet('/facility/' + currentHub, defaultHeaders, (res: any) => {
+      const facilityList = new Array<Facility>()
+      console.log('facilities', res.data)
       for (const key in res.data) {
-        departmentList.push(res.data[key])
+        facilityList.push(res.data[key])
       }
-      setDepartments(departmentList)
+      setFacilities(facilityList)
     })
   }, [currentHub])
+
+  function changeHub(event: any) {
+    console.log('currentHub', event.currentTarget.value)
+    setCurrentHub(event.currentTarget.value)
+  }
 
   return (
     <div>
@@ -62,17 +67,18 @@ function RsrvList() {
           <Form.Select
             className="col-6 mt-3 mb-1"
             data-tip="拠点情報はAPIで取得：getHubs()"
+            onChange={changeHub}
             aria-label="Default select example"
           >
             <option>拠点を選択してください。</option>
-            <option value="1">横浜本社</option>
-            <option value="2">大阪</option>
-            <option value="3">広島</option>
-            <option value="4">福岡</option>
-            <option value="5">仙台</option>
-            <option value="6">札幌</option>
-            <option value="7">高松</option>
-            <option value="8">新潟</option>
+            {hubs &&
+              hubs.map((hub) => {
+                return (
+                  <option key={hub.id} value={hub.id}>
+                    {hub.name}
+                  </option>
+                )
+              })}
           </Form.Select>
           <Form.Select
             className="col-6 mb-1"
@@ -80,14 +86,13 @@ function RsrvList() {
             aria-label="Default select example"
           >
             <option>施設を選択してください。</option>
-            <option value="1">2F小会議室A (1,500 円 / 時間)</option>
-            <option value="2">2F小会議室B (1,500 円 / 時間)</option>
-            <option value="3">2F中会議室C (2,500 円 / 時間)</option>
-            <option value="4">3F面談室D (1,000 円 / 時間)</option>
-            <option value="5">3F面談室E (1,000 円 / 時間)</option>
-            <option value="6">4F中会議室F (2,500 円 / 時間)</option>
-            <option value="7">4F大会議室G (3,500 円 / 時間)</option>
-            <option value="8">5F全体ホールH (5,000 円 / 時間)</option>
+            {facilities?.map((item, index) => {
+              return (
+                <option key={index} value={index}>
+                  {item.name} ({item.hourly_fees.toLocaleString()} 円 / 時間)
+                </option>
+              )
+            })}
           </Form.Select>
           <Row className="align-items-center">
             <Col>
