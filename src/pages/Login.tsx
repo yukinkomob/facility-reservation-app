@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button'
 import { Container } from 'react-bootstrap'
 import ReactTooltip from 'react-tooltip'
 import { useHistory } from 'react-router'
-import { domain } from 'common/constants'
+import { domain } from 'common/Constants'
 
 function Login() {
   const [email, setEmail] = useState<string>('')

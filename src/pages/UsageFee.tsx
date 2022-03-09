@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { Col, Form, ListGroup, Row } from 'react-bootstrap'
 import ReactTooltip from 'react-tooltip'
 import axios from 'axios'
-import { domain } from 'common/constants'
+import { domain } from 'common/Constants'
 
 interface Hub {
   id: number

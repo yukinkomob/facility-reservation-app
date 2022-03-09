@@ -3,7 +3,7 @@ import { Form, ListGroup } from 'react-bootstrap'
 import ReactTooltip from 'react-tooltip'
 import axios from 'axios'
 import { useState, useCallback, useEffect } from 'react'
-import { domain } from 'common/constants'
+import { domain } from 'common/Constants'
 
 interface Account {
   employee_id: number
