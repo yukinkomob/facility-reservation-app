@@ -1,11 +1,10 @@
-import { useCallback, useState } from 'react'
-import axios from 'axios'
+import { useState } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { Container } from 'react-bootstrap'
 import ReactTooltip from 'react-tooltip'
 import { useHistory } from 'react-router'
-import { domain } from 'common/Constants'
+import { callApiPost } from 'common/ApiWrapper'
 
 function Login() {
   const [email, setEmail] = useState<string>('')
@@ -23,26 +22,9 @@ function Login() {
     password,
   }
 
-  const callApi = useCallback(
-    (path: string, headers: any, body: any, callback: any) => {
-      const url = domain + '/api' + path
-      axios
-        .post(url, body, {
-          headers,
-        })
-        .then((res) => {
-          callback(res)
-        })
-        .catch((e) => {
-          console.log(e)
-        })
-    },
-    [],
-  )
-
   function doLogin() {
     console.log('login')
-    callApi('/login', headers, body, (res: any) => {
+    callApiPost('/login', headers, body, (res: any) => {
       console.log(res)
       const { data } = res
       console.log('token', data.access_token)

@@ -1,9 +1,8 @@
 import Header from 'components/Header'
 import { Form, ListGroup } from 'react-bootstrap'
 import ReactTooltip from 'react-tooltip'
-import axios from 'axios'
-import { useState, useCallback, useEffect } from 'react'
-import { domain } from 'common/Constants'
+import { useState, useEffect } from 'react'
+import { callApiGet } from 'common/ApiWrapper'
 
 interface Account {
   employee_id: number
@@ -24,23 +23,6 @@ const headers = {
 
 function ManageUsers() {
   const [accounts, setAccounts] = useState<Array<Account>>()
-
-  const callApiGet = useCallback(
-    (path: string, headers: any, callback: any) => {
-      const url = domain + '/api' + path
-      axios
-        .get(url, {
-          headers,
-        })
-        .then((res) => {
-          callback(res)
-        })
-        .catch((e) => {
-          console.log(e)
-        })
-    },
-    [],
-  )
 
   useEffect(() => {
     callApiGet('/account', headers, (res: any) => {

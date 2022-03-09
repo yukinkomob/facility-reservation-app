@@ -1,9 +1,8 @@
 import Header from 'components/Header'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { Col, Form, ListGroup, Row } from 'react-bootstrap'
 import ReactTooltip from 'react-tooltip'
-import axios from 'axios'
-import { domain } from 'common/Constants'
+import { callApiGet, callApiPost } from 'common/ApiWrapper'
 
 interface Hub {
   id: number
@@ -42,40 +41,6 @@ function UsageFee() {
   const [currentYear, setCurrentYear] = useState<string>('')
   const [currentMonth, setCurrentMonth] = useState<string>('')
   const [usageFees, setUsageFees] = useState<Array<UsageFeeData>>()
-
-  const callApiGet = useCallback(
-    (path: string, headers: any, callback: any) => {
-      const url = domain + '/api' + path
-      axios
-        .get(url, {
-          headers,
-        })
-        .then((res) => {
-          callback(res)
-        })
-        .catch((e) => {
-          console.log(e)
-        })
-    },
-    [],
-  )
-
-  const callApiPost = useCallback(
-    (path: string, headers: any, body: any, callback: any) => {
-      const url = domain + '/api' + path
-      axios
-        .post(url, body, {
-          headers,
-        })
-        .then((res) => {
-          callback(res)
-        })
-        .catch((e) => {
-          console.log(e)
-        })
-    },
-    [],
-  )
 
   useEffect(() => {
     // 拠点を取得
