@@ -96,31 +96,6 @@ function ManageUsers() {
                 </ListGroup.Item>
               )
             })}
-
-          {/*
-             <ListGroup.Item>
-            <div>ID: 0001　中富 太郎</div>
-            <div>拠点：横浜本社、所属：社長室、役割：管理者</div>
-            <div>TEL：080-3344-8876、Email：t.nakatomi@nakatomi-trade.com</div>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <div>ID: 0002　中富 継太</div>
-            <div>
-              拠点：横浜本社、所属：営業統括部本社営業部、役割：一般ユーザ
-            </div>
-            <div>TEL：080-2244-5543、Email：k.nakatomi@nakatomi-trade.com</div>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <div>ID: 0003　増田 浩二</div>
-            <div>拠点：横浜本社、所属：監査部、役割：庶務係</div>
-            <div>TEL：080-3443-8953、Email：k.masuda@nakatomi-trade.com</div>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <div>ID: 0004　根本 真夫</div>
-            <div>拠点：横浜本社、所属：営業統括部、役割：一般ユーザ</div>
-            <div>TEL：080-3443-8953、Email：k.masuda@nakatomi-trade.com</div>
-            </ListGroup.Item> 
-          */}
         </ListGroup>
       </div>
     </div>
