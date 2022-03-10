@@ -3,13 +3,27 @@ import Header from 'components/Header'
 import { useState, useEffect } from 'react'
 import { Col, Form, ListGroup, Row } from 'react-bootstrap'
 import ReactTooltip from 'react-tooltip'
-import { defaultHeaders, callApiGet } from 'common/ApiWrapper'
+import { defaultHeaders, callApiGet, callApiPost } from 'common/ApiWrapper'
 import { INVALID_ID } from 'common/Constants'
+
+type Reservation = {
+  id: number
+  reservation_person_id: number // TODO 部署とアカウント名に置換
+  tel: string
+  start_time: string
+  end_time: string
+  date: string
+}
 
 function RsrvList() {
   const [hubs, setHubs] = useState<Array<Hub>>()
   const [facilities, setFacilities] = useState<Array<Facility>>()
+  const [reservations, setReservations] = useState<Array<Reservation>>()
   const [currentHub, setCurrentHub] = useState<number>(INVALID_ID)
+  const [currentFacility, setCurrentFacility] = useState<string>('')
+  const [currentYear, setCurrentYear] = useState<string>('')
+  const [currentMonth, setCurrentMonth] = useState<string>('')
+  const [currentDay, setCurrentDay] = useState<string>('')
 
   useEffect(() => {
     // 拠点を取得
@@ -35,9 +49,90 @@ function RsrvList() {
     })
   }, [currentHub])
 
+  useEffect(() => {
+    // 予約情報を取得
+    if (
+      currentFacility === '' ||
+      currentYear === '' ||
+      currentMonth === '' ||
+      currentDay === ''
+    ) {
+      console.log('予約情報の取得に必要な情報が不足しています。')
+      return
+    }
+    const body = {
+      facility_id: currentFacility,
+      usage_date: currentYear + '-' + currentMonth + '-' + currentDay,
+    }
+    callApiPost('/reservation-info', defaultHeaders, body, (res: any) => {
+      const reservationList = new Array<Reservation>()
+      console.log('reservations=', res.data)
+      for (const key in res.data) {
+        reservationList.push(res.data[key])
+      }
+      setReservations(reservationList)
+    })
+  }, [currentFacility, currentYear, currentMonth, currentDay])
+
+  function getHeaderLabel() {
+    if (
+      currentYear === '' ||
+      currentMonth === '' ||
+      currentDay === '' ||
+      hubs.length <= 0 ||
+      currentHub === INVALID_ID ||
+      facilities <= 0 ||
+      currentFacility === INVALID_ID
+    ) {
+      console.log('ラベルの作成に必要な情報が不足しています。')
+      return
+    }
+    const hubName = hubs[parseInt(currentHub)].name
+    console.log('hubName=' + hubName)
+    const facilityName = facilities[parseInt(currentFacility)].name
+    console.log('facilityName=' + facilityName)
+
+    return (
+      currentYear +
+      '年' +
+      currentMonth +
+      '月' +
+      currentDay +
+      '日、拠点: ' +
+      hubName +
+      '、施設: ' +
+      facilityName
+    )
+  }
+
   function changeHub(event: any) {
     console.log('currentHub', event.currentTarget.value)
     setCurrentHub(event.currentTarget.value)
+  }
+
+  function changeFacility(event: any) {
+    console.log('currentFacility', event.currentTarget.value)
+    setCurrentFacility(event.currentTarget.value)
+  }
+
+  function changeYear(event: any) {
+    console.log('year', event.currentTarget.value)
+    setCurrentYear(event.currentTarget.value)
+  }
+
+  function changeMonth(event: any) {
+    console.log('month', event.currentTarget.value)
+    setCurrentMonth(event.currentTarget.value)
+  }
+
+  function changeDay(event: any) {
+    console.log('day', event.currentTarget.value)
+    setCurrentDay(event.currentTarget.value)
+  }
+
+  function tidyTime(time: string): string {
+    const timeParts = time.split(':')
+    return timeParts[0] + ':' + timeParts[1]
   }
 
   return (
@@ -82,6 +177,7 @@ function RsrvList() {
           </Form.Select>
           <Form.Select
             className="col-6 mb-1"
+            onChange={changeFacility}
             data-tip="施設情報はAPIで取得：getHubs()で拠点と同時に取得するのが良いかも"
             aria-label="Default select example"
           >
@@ -107,6 +203,7 @@ function RsrvList() {
             <Col>
               <Form.Select
                 className="col-6 mt-3 mb-1"
+                onChange={changeYear}
                 aria-label="Default select example"
               >
                 <option>年</option>
@@ -118,18 +215,19 @@ function RsrvList() {
             <Col>
               <Form.Select
                 className="col-6 mt-3 mb-1"
+                onChange={changeMonth}
                 aria-label="Default select example"
               >
                 <option>月</option>
-                <option value="1">1 月</option>
-                <option value="2">2 月</option>
-                <option value="3">3 月</option>
-                <option value="4">4 月</option>
-                <option value="5">5 月</option>
-                <option value="6">6 月</option>
-                <option value="7">7 月</option>
-                <option value="8">8 月</option>
-                <option value="9">9 月</option>
+                <option value="01">1 月</option>
+                <option value="02">2 月</option>
+                <option value="03">3 月</option>
+                <option value="04">4 月</option>
+                <option value="05">5 月</option>
+                <option value="06">6 月</option>
+                <option value="07">7 月</option>
+                <option value="08">8 月</option>
+                <option value="09">9 月</option>
                 <option value="10">10 月</option>
                 <option value="11">11 月</option>
                 <option value="12">12 月</option>
@@ -138,18 +236,19 @@ function RsrvList() {
             <Col>
               <Form.Select
                 className="col-6 mt-3 mb-1"
+                onChange={changeDay}
                 aria-label="Default select example"
               >
                 <option>日</option>
-                <option value="1">1 日</option>
-                <option value="2">2 日</option>
-                <option value="3">3 日</option>
-                <option value="4">4 日</option>
-                <option value="5">5 日</option>
-                <option value="6">6 日</option>
-                <option value="7">7 日</option>
-                <option value="8">8 日</option>
-                <option value="9">9 日</option>
+                <option value="01">1 日</option>
+                <option value="02">2 日</option>
+                <option value="03">3 日</option>
+                <option value="04">4 日</option>
+                <option value="05">5 日</option>
+                <option value="06">6 日</option>
+                <option value="07">7 日</option>
+                <option value="08">8 日</option>
+                <option value="09">9 日</option>
                 <option value="10">10 日</option>
                 <option value="11">11 日</option>
                 <option value="12">12 日</option>
@@ -178,8 +277,21 @@ function RsrvList() {
         </Form>
         <ListGroup className="mt-5">
           <h3 data-tip="変数がいっぱい並んでいて少し息苦しい（日付、拠点、施設）">
-            〇年〇月〇日　〇〇拠点　〇〇室　予約一覧
+            {getHeaderLabel()}
           </h3>
+          {reservations?.map((item) => {
+            return (
+              <ListGroup.Item>
+                <div>
+                  予約者: {item.reservation_person_id} （{item.tel}）
+                </div>
+                <div>
+                  予約時間帯: {tidyTime(item.start_time)}-
+                  {tidyTime(item.end_time)}
+                </div>
+              </ListGroup.Item>
+            )
+          })}
           <ListGroup.Item data-tip="クリックすると予約詳細画面に移行する。ダイアログでもいいかも...">
             <div>予約者：営業統括部本社営業部　中富太郎（090-2244-7755）</div>
             <div>予約時間帯：9:00-11:00</div>
