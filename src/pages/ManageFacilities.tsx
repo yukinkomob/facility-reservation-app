@@ -1,8 +1,32 @@
+// @ts-nocheck
 import Header from 'components/Header'
 import { Button, Col, Form, ListGroup, Row } from 'react-bootstrap'
 import ReactTooltip from 'react-tooltip'
+import { useState, useEffect } from 'react'
+import { defaultHeaders, callApiGet } from 'common/ApiWrapper'
+import { INVALID_ID } from 'common/Constants'
 
 function ManageFacilities() {
+  const [hubs, setHubs] = useState<Array<Hub>>()
+  const [currentHub, setCurrentHub] = useState<number>(INVALID_ID)
+
+  useEffect(() => {
+    // 拠点を取得
+    callApiGet('/hub', defaultHeaders, (res: any) => {
+      const HubList = new Array<Hub>()
+      console.log('hub', res.data)
+      for (const key in res.data) {
+        HubList.push(res.data[key])
+      }
+      setHubs(HubList)
+    })
+  }, [])
+
+  function changeHub(event: any) {
+    console.log('currentHub', event.currentTarget.value)
+    setCurrentHub(event.currentTarget.value)
+  }
+
   return (
     <div>
       <Header />
@@ -32,18 +56,19 @@ function ManageFacilities() {
         <Form className="mt-3">
           <Form.Select
             className="col-6 mt-3 mb-1"
+            onChange={changeHub}
             aria-label="Default select example"
             data-tip="拠点情報はAPIで取得：getHubs()"
           >
             <option>拠点を選択してください。</option>
-            <option value="1">横浜本社</option>
-            <option value="2">大阪</option>
-            <option value="3">広島</option>
-            <option value="4">福岡</option>
-            <option value="5">仙台</option>
-            <option value="6">札幌</option>
-            <option value="7">高松</option>
-            <option value="8">新潟</option>
+            {hubs &&
+              hubs.map((hub) => {
+                return (
+                  <option key={hub.id} value={hub.id}>
+                    {hub.name}
+                  </option>
+                )
+              })}
           </Form.Select>
         </Form>
         <Button
