@@ -8,7 +8,9 @@ import { INVALID_ID } from 'common/Constants'
 
 type Reservation = {
   id: number
-  reservation_person_id: number // TODO 部署とアカウント名に置換
+  reservation_person_id: number
+  account_name: string
+  department_name: string
   tel: string
   start_time: string
   end_time: string
@@ -283,7 +285,8 @@ function RsrvList() {
             return (
               <ListGroup.Item>
                 <div>
-                  予約者: {item.reservation_person_id} （{item.tel}）
+                  予約者: {item.department_name} {item.account_name} （
+                  {item.tel}）
                 </div>
                 <div>
                   予約時間帯: {tidyTime(item.start_time)}-
@@ -292,18 +295,6 @@ function RsrvList() {
               </ListGroup.Item>
             )
           })}
-          <ListGroup.Item data-tip="クリックすると予約詳細画面に移行する。ダイアログでもいいかも...">
-            <div>予約者：営業統括部本社営業部　中富太郎（090-2244-7755）</div>
-            <div>予約時間帯：9:00-11:00</div>
-          </ListGroup.Item>
-          <ListGroup.Item data-tip="このリスト項目内に変更・削除ボタンを表示する？">
-            <div>予約者：管理部　加藤次郎（090-1234-6644）</div>
-            <div>予約時間帯：13:00-15:00</div>
-          </ListGroup.Item>
-          <ListGroup.Item data-tip="リストに表示する内容は要検討。そもそもリストでいいのかどうかも...">
-            <div>予約者：システム部　玉出三郎（090-9089-0135）</div>
-            <div>予約時間帯：19:00-21:00</div>
-          </ListGroup.Item>
         </ListGroup>
       </div>
     </div>
