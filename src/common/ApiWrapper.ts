@@ -39,3 +39,36 @@ export function callApiPost(
       console.log(e)
     })
 }
+
+export function callApiPut(
+  path: string,
+  headers: any,
+  body: any,
+  callback: any,
+) {
+  const url = domain + '/api' + path
+  axios
+    .put(url, body, {
+      headers,
+    })
+    .then((res) => {
+      callback(res)
+    })
+    .catch((e) => {
+      console.log(e)
+    })
+}
+
+export function callApiDelete(path: string, headers: any, callback: any) {
+  const url = domain + '/api' + path
+  axios
+    .delete(url, {
+      headers,
+    })
+    .then((res) => {
+      callback(res)
+    })
+    .catch((e) => {
+      console.log(e)
+    })
+}

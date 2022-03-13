@@ -3,7 +3,13 @@ import Header from 'components/Header'
 import { Button, Col, Form, ListGroup, Row } from 'react-bootstrap'
 import ReactTooltip from 'react-tooltip'
 import { useState, useEffect } from 'react'
-import { defaultHeaders, callApiGet, callApiPost } from 'common/ApiWrapper'
+import {
+  defaultHeaders,
+  callApiGet,
+  callApiPost,
+  callApiPut,
+  callApiDelete,
+} from 'common/ApiWrapper'
 import { INVALID_ID } from 'common/Constants'
 
 type Facility = {
@@ -41,7 +47,17 @@ function ManageFacilities() {
       let facilityList = new Array<Facility>()
       console.log('facilities=', res.data)
       for (const key in res.data) {
-        facilityList.push(res.data[key])
+        const item = res.data[key]
+        const facility: Facility = {
+          id: item.id,
+          name: item.name,
+          hub_id: item.hub_id,
+          hourly_fees: item.hourly_fees,
+          reservable_timezone_start_time: item.reservable_timezone_start_time,
+          reservable_timezone_end_time: item.reservable_timezone_end_time,
+          continuous_avairable_time: item.continuous_avairable_time,
+        }
+        facilityList.push(facility)
       }
       if (facilityList.length > 1) {
         facilityList = facilityList.sort((a, b) => {
@@ -52,9 +68,122 @@ function ManageFacilities() {
     })
   }, [currentHub])
 
+  function updateFacility(event: Event, id: number) {
+    event.preventDefault()
+    console.log('updateFacility id=' + id)
+    const facility = facilities?.filter((item) => item.id === id)[0]
+    const body = {
+      name: facility.name,
+      hub_id: facility.hub_id,
+      hourly_fees: facility.hourly_fees,
+      reservable_timezone_start_time: facility.reservable_timezone_start_time,
+      reservable_timezone_end_time: facility.reservable_timezone_end_time,
+      continuous_avairable_time: facility.continuous_avairable_time,
+    }
+    callApiPut('/facility/' + id, defaultHeaders, body, (res: any) => {
+      // 成功 or 失敗通知
+      console.log(res.data)
+    })
+  }
+
+  function deleteFacility(event: Event, id: number) {
+    event.preventDefault()
+    console.log('deleteFacility id=' + id)
+    // DELETE facility/id を呼び出す
+    callApiDelete('/facility/' + id, defaultHeaders, (res: any) => {
+      // 成功 or 失敗通知
+      console.log(res.data)
+    })
+  }
+
   function changeHub(event: any) {
     console.log('currentHub', event.currentTarget.value)
     setCurrentHub(event.currentTarget.value)
+  }
+
+  function changeName(event: any, id: number) {
+    console.log('changeName event=' + event + ', id=' + id)
+    const facility = facilities?.filter((item) => item.id === id)[0]
+    facility.name = event.target.value
+  }
+
+  function changeHourlyFees(event: any, id: number) {
+    console.log('changeHourlyFees event=' + event + ', id=' + id)
+    const facility = facilities?.filter((item) => item.id === id)[0]
+    facility.hourly_fees = event.target.value
+  }
+
+  function changeStartHour(event: any, id: number) {
+    console.log('changeStartHour event=' + event + ', id=' + id)
+    let hour = event.target.value
+    if (hour.length === 1) {
+      hour = '0' + hour
+    }
+    const facility = facilities?.filter((item) => item.id === id)[0]
+    console.log(facility)
+    const timeParts = facility?.reservable_timezone_start_time.split(':')
+    facility.reservable_timezone_start_time =
+      hour + ':' + timeParts[1] + ':' + timeParts[2]
+  }
+
+  function changeStartMinute(event: any, id: number) {
+    console.log('changeStartMinute event=' + event + ', id=' + id)
+    let minute = event.target.value
+    if (minute.length === 1) {
+      minute = '0' + minute
+    }
+    const facility = facilities?.filter((item) => item.id === id)[0]
+    const timeParts = facility?.reservable_timezone_start_time.split(':')
+    facility.reservable_timezone_start_time =
+      timeParts[0] + ':' + minute + ':' + timeParts[2]
+  }
+
+  function changeEndHour(event: any, id: number) {
+    console.log('changeEndHour event=' + event + ', id=' + id)
+    let hour = event.target.value
+    if (hour.length === 1) {
+      hour = '0' + hour
+    }
+    const facility = facilities?.filter((item) => item.id === id)[0]
+    const timeParts = facility?.reservable_timezone_end_time.split(':')
+    facility.reservable_timezone_end_time =
+      hour + ':' + timeParts[1] + ':' + timeParts[2]
+  }
+
+  function changeEndMinute(event: any, id: number) {
+    console.log('changeEndMinute event=' + event + ', id=' + id)
+    let minute = event.target.value
+    if (minute.length === 1) {
+      minute = '0' + minute
+    }
+    const facility = facilities?.filter((item) => item.id === id)[0]
+    const timeParts = facility?.reservable_timezone_end_time.split(':')
+    facility.reservable_timezone_end_time =
+      timeParts[0] + ':' + minute + ':' + timeParts[2]
+  }
+
+  function changeContinuousHour(event: any, id: number) {
+    console.log('changeContinuousHour event=' + event + ', id=' + id)
+    let hour = event.target.value
+    if (hour.length === 1) {
+      hour = '0' + hour
+    }
+    const facility = facilities?.filter((item) => item.id === id)[0]
+    const timeParts = facility?.continuous_avairable_time.split(':')
+    facility.continuous_avairable_time =
+      hour + ':' + timeParts[1] + ':' + timeParts[2]
+  }
+
+  function changeContinuousMinute(event: any, id: number) {
+    console.log('changeContinuousMinute event=' + event + ', id=' + id)
+    let minute = event.target.value
+    if (minute.length === 1) {
+      minute = '0' + minute
+    }
+    const facility = facilities?.filter((item) => item.id === id)[0]
+    const timeParts = facility?.continuous_avairable_time.split(':')
+    facility.continuous_avairable_time =
+      timeParts[0] + ':' + minute + ':' + timeParts[2]
   }
 
   function getHour(time: string): string {
@@ -135,6 +264,7 @@ function ManageFacilities() {
                         className="mt-3"
                         type="text"
                         placeholder="施設名"
+                        onChange={(e) => changeName(e, item.id)}
                         defaultValue={item.name}
                       />
                     </Col>
@@ -150,6 +280,7 @@ function ManageFacilities() {
                         className="mt-3"
                         type="number"
                         placeholder="1時間当たりの利用料金"
+                        onChange={(e) => changeHourlyFees(e, item.id)}
                         defaultValue={item.hourly_fees}
                       />
                     </Col>
@@ -164,6 +295,7 @@ function ManageFacilities() {
                       <Form.Select
                         className="col-6 mt-3 mb-1"
                         aria-label="Default select example"
+                        onChange={(e) => changeStartHour(e, item.id)}
                         defaultValue={getHour(
                           item?.reservable_timezone_start_time,
                         )}
@@ -199,6 +331,7 @@ function ManageFacilities() {
                       <Form.Select
                         className="col-6 mt-3 mb-1"
                         aria-label="Default select example"
+                        onChange={(e) => changeStartMinute(e, item.id)}
                         defaultValue={getMinute(
                           item?.reservable_timezone_start_time,
                         )}
@@ -219,6 +352,7 @@ function ManageFacilities() {
                       <Form.Select
                         className="col-6 mt-3 mb-1"
                         aria-label="Default select example"
+                        onChange={(e) => changeEndHour(e, item.id)}
                         defaultValue={getHour(
                           item?.reservable_timezone_end_time,
                         )}
@@ -254,6 +388,7 @@ function ManageFacilities() {
                       <Form.Select
                         className="col-6 mt-3 mb-1"
                         aria-label="Default select example"
+                        onChange={(e) => changeEndMinute(e, item.id)}
                         defaultValue={getMinute(
                           item?.reservable_timezone_end_time,
                         )}
@@ -281,6 +416,7 @@ function ManageFacilities() {
                       <Form.Select
                         className="col-6 mt-3 mb-1"
                         aria-label="Default select example"
+                        onChange={(e) => changeContinuousHour(e, item.id)}
                         defaultValue={getHour(item?.continuous_avairable_time)}
                       >
                         <option>時間</option>
@@ -315,6 +451,7 @@ function ManageFacilities() {
                       <Form.Select
                         className="col-6 mt-3 mb-1"
                         aria-label="Default select example"
+                        onChange={(e) => changeContinuousMinute(e, item.id)}
                         defaultValue={getMinute(
                           item?.continuous_avairable_time,
                         )}
@@ -334,6 +471,7 @@ function ManageFacilities() {
                         variant="primary"
                         type="submit"
                         data-tip="API: registerRsrv(...) を呼び出す"
+                        onClick={(e) => updateFacility(e, item.id)}
                       >
                         保　存
                       </Button>
@@ -344,6 +482,7 @@ function ManageFacilities() {
                         variant="outline-danger"
                         type="submit"
                         data-tip="API: registerRsrv(...) を呼び出す"
+                        onClick={(e) => deleteFacility(e, item.id)}
                       >
                         削　除
                       </Button>
