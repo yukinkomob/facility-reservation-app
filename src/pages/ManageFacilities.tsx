@@ -34,15 +34,19 @@ function ManageFacilities() {
   }, [])
 
   useEffect(() => {
-    // TODO 施設情報を取得: facility-info
     const body = {
       hub_id: currentHub,
     }
     callApiPost('/facility-info', defaultHeaders, body, (res: any) => {
-      const facilityList = new Array<Facility>()
+      let facilityList = new Array<Facility>()
       console.log('facilities=', res.data)
       for (const key in res.data) {
         facilityList.push(res.data[key])
+      }
+      if (facilityList.length > 1) {
+        facilityList = facilityList.sort((a, b) => {
+          return a.id < b.id ? -1 : 1
+        })
       }
       setFacilities(facilityList)
     })
