@@ -2,7 +2,7 @@
 import Header from 'components/Header'
 import { Button, Col, Form, ListGroup, Row } from 'react-bootstrap'
 import ReactTooltip from 'react-tooltip'
-import { useState, useEffect } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import {
   defaultHeaders,
   callApiGet,
@@ -11,6 +11,7 @@ import {
   callApiDelete,
 } from 'common/ApiWrapper'
 import { INVALID_ID } from 'common/Constants'
+import FacilityModal from 'components/FacilityModal'
 
 type Facility = {
   id: number
@@ -26,6 +27,11 @@ function ManageFacilities() {
   const [hubs, setHubs] = useState<Array<Hub>>()
   const [currentHub, setCurrentHub] = useState<number>(INVALID_ID)
   const [facilities, setFacilities] = useState<Array<Facility>>()
+  // const [show, setShow] = useState<boolean>(false)
+  const childRef = useRef()
+
+  // let handleShow: VoidFunction
+  const onClose = () => setShow(false)
 
   useEffect(() => {
     // 拠点を取得
@@ -195,9 +201,17 @@ function ManageFacilities() {
     return time?.split(':')[1]
   }
 
+  function onCreatedFacility() {}
+
   return (
     <div>
       <Header />
+      <FacilityModal
+        onCreatedCallback={onCreatedFacility}
+        hubs={hubs}
+        onClose={onClose}
+        ref={childRef}
+      />
       <div className="main-top container">
         <h1
           data-tip="このページは下記の仕様を満たす必要があります。<br />
@@ -244,6 +258,7 @@ function ManageFacilities() {
           variant="outline-success"
           type="submit"
           data-tip="API: registerRsrv(...) を呼び出す"
+          onClick={() => childRef.current?.handleShow()}
         >
           新しい施設を追加する
         </Button>
