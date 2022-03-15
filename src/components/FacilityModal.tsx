@@ -3,6 +3,7 @@ import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import { Col, Form, ListGroup, Row } from 'react-bootstrap'
 import { forwardRef, useImperativeHandle, useState } from 'react'
+import { callApiPost, defaultHeaders } from 'common/ApiWrapper'
 
 type FacilityModalProps = {
   onCreatedCallback: VoidFunction
@@ -23,9 +24,28 @@ type FacilityData = {
   continuous_time_minute: string
 }
 
+const defaultName = ''
+const defaultHubId = -1
+const defaultHourlyFees = 0
+const defaultStartTime = '00:00:00'
+const defaultEndTime = '00:00:00'
+const defaultContinuousTime = '00:00:00'
+
+const defaultFacilityData: FacilityData = {
+  name: defaultName,
+  hub_id: defaultHubId,
+  hourly_fees: defaultHourlyFees,
+  start_time_hour: defaultStartTime.split(':')[0],
+  start_time_minute: defaultStartTime.split(':')[1],
+  end_time_hour: defaultEndTime.split(':')[0],
+  end_time_minute: defaultEndTime.split(':')[1],
+  continuous_time_hour: defaultContinuousTime.split(':')[0],
+  continuous_time_minute: defaultContinuousTime.split(':')[1],
+}
+
 const FacilityModalBase: forwardRef<FacilityModalProps> = (props, ref) => {
   const [show, setShow] = useState<boolean>(false)
-  const [item, setItem] = useState<FacilityData>({})
+  const [item, setItem] = useState<FacilityData>(defaultFacilityData)
 
   // props.handleShow = (isShow: boolean) => setShow(isShow)
 
@@ -38,8 +58,66 @@ const FacilityModalBase: forwardRef<FacilityModalProps> = (props, ref) => {
     }
   })
 
-  function registerFacility() {
-    // TODO
+  function registerFacility(event: any) {
+    event.preventDefault()
+    console.log(item)
+    if (!validateFacility()) {
+      return
+    }
+    const facility = {
+      name: item.name,
+      hub_id: parseInt(item.hub_id),
+      hourly_fees: parseInt(item.hourly_fees),
+      reservable_timezone_start_time:
+        item.start_time_hour + ':' + item.start_time_minute + ':00',
+      reservable_timezone_end_time:
+        item.end_time_hour + ':' + item.end_time_minute + ':00',
+      continuous_avairable_time:
+        item.continuous_time_hour + ':' + item.continuous_time_minute + ':00',
+    }
+    callApiPost('/facility', defaultHeaders, facility, (res: any) => {
+      console.log('res.data=' + res.data)
+    })
+  }
+
+  function validateFacility(): boolean {
+    if (Object.keys(item).indexOf('name') === -1 || item.name === '') {
+      console.log('名前が未設定')
+      return false
+    }
+    if (Object.keys(item).indexOf('hub_id') === -1 || item.hub_id === -1) {
+      console.log('拠点 ID が未設定')
+      return false
+    }
+    if (Object.keys(item).indexOf('hourly_fees') === -1) {
+      console.log('1時間当たりの利用料金が未設定')
+      return false
+    }
+    if (Object.keys(item).indexOf('start_time_hour') === -1) {
+      console.log('予約可能開始時が未設定')
+      return false
+    }
+    if (Object.keys(item).indexOf('start_time_minute') === -1) {
+      console.log('予約可能開始分が未設定')
+      return false
+    }
+    if (Object.keys(item).indexOf('end_time_hour') === -1) {
+      console.log('予約可能終了時が未設定')
+      return false
+    }
+    if (Object.keys(item).indexOf('end_time_minute') === -1) {
+      console.log('予約可能終了分が未設定')
+      return false
+    }
+    if (Object.keys(item).indexOf('continuous_time_hour') === -1) {
+      console.log('連続利用可能時が未設定')
+      return false
+    }
+    if (Object.keys(item).indexOf('continuous_time_minute') === -1) {
+      console.log('連続利用可能分が未設定')
+      return false
+    }
+    return true
   }
 
   function cancel() {
@@ -149,6 +227,7 @@ const FacilityModalBase: forwardRef<FacilityModalProps> = (props, ref) => {
               className="col-6 mt-3 mb-1"
               onChange={changeHub}
               aria-label="Default select example"
+              defaultValue={defaultHubId}
             >
               <option>拠点を選択してください。</option>
               {props.hubs &&
@@ -177,7 +256,7 @@ const FacilityModalBase: forwardRef<FacilityModalProps> = (props, ref) => {
                       type="text"
                       placeholder="施設名"
                       onChange={(e) => changeName(e)}
-                      defaultValue=""
+                      defaultValue={defaultName}
                     />
                   </Col>
                 </Row>
@@ -193,7 +272,7 @@ const FacilityModalBase: forwardRef<FacilityModalProps> = (props, ref) => {
                       type="number"
                       placeholder="1時間当たりの利用料金"
                       onChange={(e) => changeHourlyFees(e)}
-                      defaultValue="0"
+                      defaultValue={defaultHourlyFees}
                     />
                   </Col>
                 </Row>
@@ -208,19 +287,19 @@ const FacilityModalBase: forwardRef<FacilityModalProps> = (props, ref) => {
                       className="col-6 mt-3 mb-1"
                       aria-label="Default select example"
                       onChange={(e) => changeStartHour(e)}
-                      defaultValue="0"
+                      defaultValue={defaultStartTime.split(':')[0]}
                     >
                       <option>時</option>
-                      <option value="0">0 時</option>
-                      <option value="1">1 時</option>
-                      <option value="2">2 時</option>
-                      <option value="3">3 時</option>
-                      <option value="4">4 時</option>
-                      <option value="5">5 時</option>
-                      <option value="6">6 時</option>
-                      <option value="7">7 時</option>
-                      <option value="8">8 時</option>
-                      <option value="9">9 時</option>
+                      <option value="00">0 時</option>
+                      <option value="01">1 時</option>
+                      <option value="02">2 時</option>
+                      <option value="03">3 時</option>
+                      <option value="04">4 時</option>
+                      <option value="05">5 時</option>
+                      <option value="06">6 時</option>
+                      <option value="07">7 時</option>
+                      <option value="08">8 時</option>
+                      <option value="09">9 時</option>
                       <option value="10">10 時</option>
                       <option value="11">11 時</option>
                       <option value="12">12 時</option>
@@ -242,7 +321,7 @@ const FacilityModalBase: forwardRef<FacilityModalProps> = (props, ref) => {
                       className="col-6 mt-3 mb-1"
                       aria-label="Default select example"
                       onChange={(e) => changeStartMinute(e)}
-                      defaultValue="00"
+                      defaultValue={defaultStartTime.split(':')[1]}
                     >
                       <option>分</option>
                       <option value="00">00 分</option>
@@ -261,19 +340,19 @@ const FacilityModalBase: forwardRef<FacilityModalProps> = (props, ref) => {
                       className="col-6 mt-3 mb-1"
                       aria-label="Default select example"
                       onChange={(e) => changeEndHour(e)}
-                      defaultValue="0"
+                      defaultValue={defaultEndTime.split(':')[0]}
                     >
                       <option>時</option>
-                      <option value="0">0 時</option>
-                      <option value="1">1 時</option>
-                      <option value="2">2 時</option>
-                      <option value="3">3 時</option>
-                      <option value="4">4 時</option>
-                      <option value="5">5 時</option>
-                      <option value="6">6 時</option>
-                      <option value="7">7 時</option>
-                      <option value="8">8 時</option>
-                      <option value="9">9 時</option>
+                      <option value="00">0 時</option>
+                      <option value="01">1 時</option>
+                      <option value="02">2 時</option>
+                      <option value="03">3 時</option>
+                      <option value="04">4 時</option>
+                      <option value="05">5 時</option>
+                      <option value="06">6 時</option>
+                      <option value="07">7 時</option>
+                      <option value="08">8 時</option>
+                      <option value="09">9 時</option>
                       <option value="10">10 時</option>
                       <option value="11">11 時</option>
                       <option value="12">12 時</option>
@@ -295,7 +374,7 @@ const FacilityModalBase: forwardRef<FacilityModalProps> = (props, ref) => {
                       className="col-6 mt-3 mb-1"
                       aria-label="Default select example"
                       onChange={(e) => changeEndMinute(e)}
-                      defaultValue="00"
+                      defaultValue={defaultEndTime.split(':')[1]}
                     >
                       <option>分</option>
                       <option value="00">00 分</option>
@@ -321,19 +400,19 @@ const FacilityModalBase: forwardRef<FacilityModalProps> = (props, ref) => {
                       className="col-6 mt-3 mb-1"
                       aria-label="Default select example"
                       onChange={(e) => changeContinuousHour(e)}
-                      defaultValue="0"
+                      defaultValue={defaultContinuousTime.split(':')[0]}
                     >
                       <option>時間</option>
-                      <option value="0">0 時間</option>
-                      <option value="1">1 時間</option>
-                      <option value="2">2 時間</option>
-                      <option value="3">3 時間</option>
-                      <option value="4">4 時間</option>
-                      <option value="5">5 時間</option>
-                      <option value="6">6 時間</option>
-                      <option value="7">7 時間</option>
-                      <option value="8">8 時間</option>
-                      <option value="9">9 時間</option>
+                      <option value="00">0 時間</option>
+                      <option value="01">1 時間</option>
+                      <option value="02">2 時間</option>
+                      <option value="03">3 時間</option>
+                      <option value="04">4 時間</option>
+                      <option value="05">5 時間</option>
+                      <option value="06">6 時間</option>
+                      <option value="07">7 時間</option>
+                      <option value="08">8 時間</option>
+                      <option value="09">9 時間</option>
                       <option value="10">10 時間</option>
                       <option value="11">11 時間</option>
                       <option value="12">12 時間</option>
@@ -356,7 +435,7 @@ const FacilityModalBase: forwardRef<FacilityModalProps> = (props, ref) => {
                       className="col-6 mt-3 mb-1"
                       aria-label="Default select example"
                       onChange={(e) => changeContinuousMinute(e)}
-                      defaultValue="00"
+                      defaultValue={defaultContinuousTime.split(':')[1]}
                     >
                       <option>分</option>
                       <option value="00">00 分</option>
@@ -373,7 +452,7 @@ const FacilityModalBase: forwardRef<FacilityModalProps> = (props, ref) => {
                       variant="outline-primary"
                       type="submit"
                       data-tip="API: registerRsrv(...) を呼び出す"
-                      onClick={props.onClose}
+                      onClick={() => setShow(false)}
                     >
                       キャンセル
                     </Button>
@@ -384,7 +463,7 @@ const FacilityModalBase: forwardRef<FacilityModalProps> = (props, ref) => {
                       variant="primary"
                       type="submit"
                       data-tip="API: registerRsrv(...) を呼び出す"
-                      onClick={() => registerFacility()}
+                      onClick={(e) => registerFacility(e)}
                     >
                       登　録
                     </Button>
