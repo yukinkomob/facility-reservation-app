@@ -27,10 +27,8 @@ function ManageFacilities() {
   const [hubs, setHubs] = useState<Array<Hub>>()
   const [currentHub, setCurrentHub] = useState<number>(INVALID_ID)
   const [facilities, setFacilities] = useState<Array<Facility>>()
-  // const [show, setShow] = useState<boolean>(false)
   const childRef = useRef()
 
-  // let handleShow: VoidFunction
   const onClose = () => setShow(false)
 
   useEffect(() => {
@@ -81,7 +79,7 @@ function ManageFacilities() {
     const body = {
       name: facility.name,
       hub_id: facility.hub_id,
-      hourly_fees: facility.hourly_fees,
+      hourly_fees: parseInt(facility.hourly_fees),
       reservable_timezone_start_time: facility.reservable_timezone_start_time,
       reservable_timezone_end_time: facility.reservable_timezone_end_time,
       continuous_avairable_time: facility.continuous_avairable_time,
@@ -89,6 +87,23 @@ function ManageFacilities() {
     callApiPut('/facility/' + id, defaultHeaders, body, (res: any) => {
       // 成功 or 失敗通知
       console.log(res.data)
+      const updatedId = res.data.id
+      const updatedFacilities = facilities?.filter(
+        (item) => item.id !== updatedId,
+      )
+
+      const item = res.data
+      const facility: Facility = {
+        id: item.id,
+        name: item.name,
+        hub_id: item.hub_id,
+        hourly_fees: item.hourly_fees,
+        reservable_timezone_start_time: item.reservable_timezone_start_time,
+        reservable_timezone_end_time: item.reservable_timezone_end_time,
+        continuous_avairable_time: item.continuous_avairable_time,
+      }
+      updatedFacilities?.push(facility)
+      setFacilities(updatedFacilities)
     })
   }
 
@@ -99,6 +114,16 @@ function ManageFacilities() {
     callApiDelete('/facility/' + id, defaultHeaders, (res: any) => {
       // 成功 or 失敗通知
       console.log(res.data)
+      if (res.data.length <= 0) {
+        console.log('削除に失敗しました。')
+        return
+      }
+      console.log('data[0]=' + res.data)
+      const deletedId = res.data.id
+      const updatedFacilities = facilities?.filter(
+        (item) => item.id !== deletedId,
+      )
+      setFacilities(updatedFacilities)
     })
   }
 

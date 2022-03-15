@@ -77,6 +77,7 @@ const FacilityModalBase: forwardRef<FacilityModalProps> = (props, ref) => {
     }
     callApiPost('/facility', defaultHeaders, facility, (res: any) => {
       console.log('res.data=' + res.data)
+      setShow(false)
     })
   }
 
