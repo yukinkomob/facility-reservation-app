@@ -53,13 +53,24 @@ enum RSRV_TYPE {
   Notice,
 }
 
+enum PARTICIPANT_TYPE {
+  CompanyName,
+  Name,
+}
+
 function MakeRsrv() {
   const [hubs, setHubs] = useState<Array<Hub>>()
   const [facilities, setFacilities] = useState<Array<Facility>>()
 
   const [currentHub, setCurrentHub] = useState<number>(INVALID_ID)
   const [currentFacility, setCurrentFacility] = useState<string>('')
-  const [currentItem, setItem] = useState<Reservation>({})
+  const [currentItem, setCurrentItem] = useState<Reservation>({})
+  const [participants, setParticipants] = useState<Participant>(
+    Array<Participant>({
+      company_name: '',
+      name: '',
+    }),
+  )
 
   useEffect(() => {
     // 拠点を取得
@@ -93,6 +104,62 @@ function MakeRsrv() {
   function changeFacility(event: any) {
     console.log('currentFacility', event.currentTarget.value)
     setCurrentFacility(event.currentTarget.value)
+  }
+
+  function changeParticipants(
+    event: any,
+    type: PARTICIPANT_TYPE,
+    index: number,
+  ) {
+    console.log(
+      'Participant index=' + index + ', value=' + event.currentTarget.value,
+    )
+    const value = event.currentTarget.value
+    const item = participants[index]
+    if (item === null || item === undefined) {
+      console.log('入力可能な参加者情報が存在しません。')
+      return
+    }
+    switch (type) {
+      case PARTICIPANT_TYPE.CompanyName:
+        item.company_name = value
+        break
+      case PARTICIPANT_TYPE.Name:
+        item.name = value
+        break
+    }
+    setParticipants([...participants])
+    console.log(participants)
+  }
+
+  function addNewParticipant(event: any, index: number) {
+    event.preventDefault()
+    console.log('addNewParticipant index=' + index)
+    const item = {
+      company_name: '',
+      name: '',
+    }
+    const items = Array<Participant>()
+    for (let i = 0; i < participants.length; i++) {
+      items.push(participants[i])
+      if (i === index) {
+        items.push(item)
+      }
+    }
+    setParticipants(items)
+    console.log(items)
+  }
+
+  function removeParticipant(event: any, index: number) {
+    event.preventDefault()
+    if (participants.length === 1) {
+      console.log('データが一つのみの場合は削除できない。')
+      return
+    }
+    console.log('removeParticipant index=' + index)
+    const items = participants.filter((item, i) => i !== index)
+    setParticipants(items)
+    console.log(items)
   }
 
   function changeReservation(event: any, type: RSRV_TYPE) {
@@ -146,9 +213,9 @@ function MakeRsrv() {
       case RSRV_TYPE.EndMinute:
         item.end_minute = value
         break
-      case RSRV_TYPE.Participants:
-        item.participants = value
-        break
+      // case RSRV_TYPE.Participants:
+      //   item.participants = value
+      //   break
       case RSRV_TYPE.IsPrivate:
         item.is_private = event.currentTarget.checked
         break
@@ -498,80 +565,52 @@ function MakeRsrv() {
           >
             参加者情報
           </Form.Label>
-          <Row>
-            <Col>
-              <Form.Control className="mt-3" type="text" placeholder="会社名" />
-            </Col>
-            <Col>
-              <Form.Control className="mt-3" type="text" placeholder="氏名" />
-            </Col>
-            <Col>
-              <Button
-                className="mt-3 me-3"
-                variant="outline-secondary"
-                type="button"
-                data-tip="参加者データを追加"
-              >
-                +
-              </Button>
-              <Button
-                className="mt-3"
-                variant="outline-secondary"
-                type="button"
-                data-tip="参加者データを削除"
-              >
-                -
-              </Button>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Form.Control className="mt-3" type="text" placeholder="会社名" />
-            </Col>
-            <Col>
-              <Form.Control className="mt-3" type="text" placeholder="氏名" />
-            </Col>
-            <Col>
-              <Button
-                className="mt-3 me-3"
-                variant="outline-secondary"
-                type="button"
-              >
-                +
-              </Button>
-              <Button
-                className="mt-3"
-                variant="outline-secondary"
-                type="button"
-              >
-                -
-              </Button>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Form.Control className="mt-3" type="text" placeholder="会社名" />
-            </Col>
-            <Col>
-              <Form.Control className="mt-3" type="text" placeholder="氏名" />
-            </Col>
-            <Col>
-              <Button
-                className="mt-3 me-3"
-                variant="outline-secondary"
-                type="button"
-              >
-                +
-              </Button>
-              <Button
-                className="mt-3"
-                variant="outline-secondary"
-                type="button"
-              >
-                -
-              </Button>
-            </Col>
-          </Row>
+          {participants?.map((item, index) => {
+            return (
+              <Row>
+                <Col>
+                  <Form.Control
+                    className="mt-3"
+                    type="text"
+                    placeholder="会社名"
+                    onChange={(e) =>
+                      changeParticipants(e, PARTICIPANT_TYPE.CompanyName, index)
+                    }
+                    value={item.company_name}
+                  />
+                </Col>
+                <Col>
+                  <Form.Control
+                    className="mt-3"
+                    type="text"
+                    placeholder="氏名"
+                    onChange={(e) =>
+                      changeParticipants(e, PARTICIPANT_TYPE.Name, index)
+                    }
+                    value={item.name}
+                  />
+                </Col>
+                <Col>
+                  <Button
+                    className="mt-3 me-3"
+                    variant="outline-secondary"
+                    type="button"
+                    onClick={(e) => addNewParticipant(e, index)}
+                  >
+                    +
+                  </Button>
+                  <Button
+                    className="mt-3"
+                    variant="outline-secondary"
+                    type="button"
+                    onClick={(e) => removeParticipant(e, index)}
+                  >
+                    -
+                  </Button>
+                </Col>
+              </Row>
+            )
+          })}
           <Form.Group
             as={Row}
             className="mt-3 mb-3"
