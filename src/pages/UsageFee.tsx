@@ -44,26 +44,36 @@ function UsageFee() {
 
   useEffect(() => {
     // 拠点を取得
-    callApiGet('/hub', headers, (res: any) => {
-      const HubList = new Array<Hub>()
-      console.log('hub', res.data)
-      for (const key in res.data) {
-        HubList.push(res.data[key])
-      }
-      setHubs(HubList)
-    })
+    callApiGet(
+      '/hub',
+      headers,
+      (res: any) => {
+        const HubList = new Array<Hub>()
+        console.log('hub', res.data)
+        for (const key in res.data) {
+          HubList.push(res.data[key])
+        }
+        setHubs(HubList)
+      },
+      (e: any) => {},
+    )
   }, [])
 
   useEffect(() => {
     // 部署を取得
-    callApiGet('/department/' + currentHub, headers, (res: any) => {
-      const departmentList = new Array<Department>()
-      console.log('department', res.data)
-      for (const key in res.data) {
-        departmentList.push(res.data[key])
-      }
-      setDepartments(departmentList)
-    })
+    callApiGet(
+      '/department/' + currentHub,
+      headers,
+      (res: any) => {
+        const departmentList = new Array<Department>()
+        console.log('department', res.data)
+        for (const key in res.data) {
+          departmentList.push(res.data[key])
+        }
+        setDepartments(departmentList)
+      },
+      (e: any) => {},
+    )
   }, [currentHub])
 
   useEffect(() => {
