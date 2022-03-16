@@ -1,3 +1,4 @@
+// @ts-nocheck
 import Header from 'components/Header'
 import { Form, ListGroup } from 'react-bootstrap'
 import ReactTooltip from 'react-tooltip'
@@ -19,13 +20,18 @@ function ManageUsers() {
   const [accounts, setAccounts] = useState<Array<Account>>()
 
   useEffect(() => {
-    callApiGet('/account', defaultHeaders, (res: any) => {
-      const accountList = new Array<Account>()
-      for (const key in res.data) {
-        accountList.push(res.data[key])
-      }
-      setAccounts(accountList)
-    })
+    callApiGet(
+      '/account',
+      defaultHeaders,
+      (res: any) => {
+        const accountList = new Array<Account>()
+        for (const key in res.data) {
+          accountList.push(res.data[key])
+        }
+        setAccounts(accountList)
+      },
+      (e: any) => {},
+    )
   }, [])
 
   return (

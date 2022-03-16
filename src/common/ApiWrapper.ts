@@ -1,3 +1,4 @@
+// @ts-nocheck
 import axios from 'axios'
 import { domain } from 'common/Constants'
 
@@ -7,7 +8,12 @@ export const defaultHeaders = {
   Authorization: 'Bearer ' + localStorage.getItem('token'),
 }
 
-export function callApiGet(path: string, headers: any, callback: any) {
+export function callApiGet(
+  path: string,
+  headers: any,
+  callback: any,
+  errorCallback: any,
+) {
   const url = domain + '/api' + path
   axios
     .get(url, {
@@ -18,6 +24,7 @@ export function callApiGet(path: string, headers: any, callback: any) {
     })
     .catch((e) => {
       console.log(e)
+      errorCallback(e)
     })
 }
 
@@ -47,6 +54,7 @@ export function callApiPut(
   headers: any,
   body: any,
   callback: any,
+  errorCallback: any,
 ) {
   const url = domain + '/api' + path
   axios
@@ -58,10 +66,16 @@ export function callApiPut(
     })
     .catch((e) => {
       console.log(e)
+      errorCallback(e)
     })
 }
 
-export function callApiDelete(path: string, headers: any, callback: any) {
+export function callApiDelete(
+  path: string,
+  headers: any,
+  callback: any,
+  errorCallback: any,
+) {
   const url = domain + '/api' + path
   axios
     .delete(url, {
@@ -72,5 +86,6 @@ export function callApiDelete(path: string, headers: any, callback: any) {
     })
     .catch((e) => {
       console.log(e)
+      errorCallback(e)
     })
 }

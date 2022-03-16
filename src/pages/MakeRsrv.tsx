@@ -71,26 +71,36 @@ function MakeRsrv() {
 
   useEffect(() => {
     // 拠点を取得
-    callApiGet('/hub', defaultHeaders, (res: any) => {
-      const HubList = new Array<Hub>()
-      console.log('hub', res.data)
-      for (const key in res.data) {
-        HubList.push(res.data[key])
-      }
-      setHubs(HubList)
-    })
+    callApiGet(
+      '/hub',
+      defaultHeaders,
+      (res: any) => {
+        const HubList = new Array<Hub>()
+        console.log('hub', res.data)
+        for (const key in res.data) {
+          HubList.push(res.data[key])
+        }
+        setHubs(HubList)
+      },
+      (e: any) => {},
+    )
   }, [])
 
   useEffect(() => {
     // 部署を取得
-    callApiGet('/facility/' + currentHub, defaultHeaders, (res: any) => {
-      const facilityList = new Array<Facility>()
-      console.log('facilities', res.data)
-      for (const key in res.data) {
-        facilityList.push(res.data[key])
-      }
-      setFacilities(facilityList)
-    })
+    callApiGet(
+      '/facility/' + currentHub,
+      defaultHeaders,
+      (res: any) => {
+        const facilityList = new Array<Facility>()
+        console.log('facilities', res.data)
+        for (const key in res.data) {
+          facilityList.push(res.data[key])
+        }
+        setFacilities(facilityList)
+      },
+      (e: any) => {},
+    )
   }, [currentHub])
 
   function registerReservation(event: any) {

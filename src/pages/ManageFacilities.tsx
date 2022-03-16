@@ -33,14 +33,19 @@ function ManageFacilities() {
 
   useEffect(() => {
     // 拠点を取得
-    callApiGet('/hub', defaultHeaders, (res: any) => {
-      const HubList = new Array<Hub>()
-      console.log('hub', res.data)
-      for (const key in res.data) {
-        HubList.push(res.data[key])
-      }
-      setHubs(HubList)
-    })
+    callApiGet(
+      '/hub',
+      defaultHeaders,
+      (res: any) => {
+        const HubList = new Array<Hub>()
+        console.log('hub', res.data)
+        for (const key in res.data) {
+          HubList.push(res.data[key])
+        }
+        setHubs(HubList)
+      },
+      (e: any) => {},
+    )
   }, [])
 
   useEffect(() => {
@@ -90,47 +95,58 @@ function ManageFacilities() {
       reservable_timezone_end_time: facility.reservable_timezone_end_time,
       continuous_avairable_time: facility.continuous_avairable_time,
     }
-    callApiPut('/facility/' + id, defaultHeaders, body, (res: any) => {
-      // 成功 or 失敗通知
-      console.log(res.data)
-      const updatedId = res.data.id
-      const updatedFacilities = facilities?.filter(
-        (item) => item.id !== updatedId,
-      )
+    callApiPut(
+      '/facility/' + id,
+      defaultHeaders,
+      body,
+      (res: any) => {
+        // 成功 or 失敗通知
+        console.log(res.data)
+        const updatedId = res.data.id
+        const updatedFacilities = facilities?.filter(
+          (item) => item.id !== updatedId,
+        )
 
-      const item = res.data
-      const facility: Facility = {
-        id: item.id,
-        name: item.name,
-        hub_id: item.hub_id,
-        hourly_fees: item.hourly_fees,
-        reservable_timezone_start_time: item.reservable_timezone_start_time,
-        reservable_timezone_end_time: item.reservable_timezone_end_time,
-        continuous_avairable_time: item.continuous_avairable_time,
-      }
-      updatedFacilities?.push(facility)
-      setFacilities(updatedFacilities)
-    })
+        const item = res.data
+        const facility: Facility = {
+          id: item.id,
+          name: item.name,
+          hub_id: item.hub_id,
+          hourly_fees: item.hourly_fees,
+          reservable_timezone_start_time: item.reservable_timezone_start_time,
+          reservable_timezone_end_time: item.reservable_timezone_end_time,
+          continuous_avairable_time: item.continuous_avairable_time,
+        }
+        updatedFacilities?.push(facility)
+        setFacilities(updatedFacilities)
+      },
+      (e: any) => {},
+    )
   }
 
   function deleteFacility(event: Event, id: number) {
     event.preventDefault()
     console.log('deleteFacility id=' + id)
     // DELETE facility/id を呼び出す
-    callApiDelete('/facility/' + id, defaultHeaders, (res: any) => {
-      // 成功 or 失敗通知
-      console.log(res.data)
-      if (res.data.length <= 0) {
-        console.log('削除に失敗しました。')
-        return
-      }
-      console.log('data[0]=' + res.data)
-      const deletedId = res.data.id
-      const updatedFacilities = facilities?.filter(
-        (item) => item.id !== deletedId,
-      )
-      setFacilities(updatedFacilities)
-    })
+    callApiDelete(
+      '/facility/' + id,
+      defaultHeaders,
+      (res: any) => {
+        // 成功 or 失敗通知
+        console.log(res.data)
+        if (res.data.length <= 0) {
+          console.log('削除に失敗しました。')
+          return
+        }
+        console.log('data[0]=' + res.data)
+        const deletedId = res.data.id
+        const updatedFacilities = facilities?.filter(
+          (item) => item.id !== deletedId,
+        )
+        setFacilities(updatedFacilities)
+      },
+      (e: any) => {},
+    )
   }
 
   function changeHub(event: any) {
