@@ -1,3 +1,4 @@
+// @ts-nocheck
 import Header from 'components/Header'
 import { useState, useEffect } from 'react'
 import { Col, Form, ListGroup, Row } from 'react-bootstrap'
@@ -96,6 +97,7 @@ function UsageFee() {
           }
           setUsageFees(items)
         },
+        (e: any) => {},
       )
     }
   }, [currentYear, currentMonth, currentDepartment])

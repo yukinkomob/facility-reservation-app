@@ -26,6 +26,7 @@ export function callApiPost(
   headers: any,
   body: any,
   callback: any,
+  errorCallback: any,
 ) {
   const url = domain + '/api' + path
   axios
@@ -37,6 +38,7 @@ export function callApiPost(
     })
     .catch((e) => {
       console.log(e)
+      errorCallback(e)
     })
 }
 

@@ -66,14 +66,20 @@ function RsrvList() {
       facility_id: currentFacility,
       usage_date: currentYear + '-' + currentMonth + '-' + currentDay,
     }
-    callApiPost('/reservation-info', defaultHeaders, body, (res: any) => {
-      const reservationList = new Array<Reservation>()
-      console.log('reservations=', res.data)
-      for (const key in res.data) {
-        reservationList.push(res.data[key])
-      }
-      setReservations(reservationList)
-    })
+    callApiPost(
+      '/reservation-info',
+      defaultHeaders,
+      body,
+      (res: any) => {
+        const reservationList = new Array<Reservation>()
+        console.log('reservations=', res.data)
+        for (const key in res.data) {
+          reservationList.push(res.data[key])
+        }
+        setReservations(reservationList)
+      },
+      (e: any) => {},
+    )
   }, [currentFacility, currentYear, currentMonth, currentDay])
 
   function getHeaderLabel() {

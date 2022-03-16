@@ -3,7 +3,7 @@ import Header from 'components/Header'
 import { Button, Col, Form, Row } from 'react-bootstrap'
 import ReactTooltip from 'react-tooltip'
 import { useState, useEffect } from 'react'
-import { defaultHeaders, callApiGet } from 'common/ApiWrapper'
+import { defaultHeaders, callApiGet, callApiPost } from 'common/ApiWrapper'
 import { INVALID_ID } from 'common/Constants'
 
 // TODO 予約者 ID は自分自身であり、ログイン成功時に ID をlocalStorageに保存しておくこと
@@ -23,9 +23,6 @@ type Reservation = {
   start_day: string
   start_hour: string
   start_minute: string
-  end_year: string
-  end_month: string
-  end_day: string
   end_hour: string
   end_minute: string
   participants: Array<Participant>
@@ -95,6 +92,62 @@ function MakeRsrv() {
       setFacilities(facilityList)
     })
   }, [currentHub])
+
+  function registerReservation(event: any) {
+    // データ生成
+    const data = makeReservationData()
+    // API: post
+    callApiPost(
+      '/reservation',
+      defaultHeaders,
+      data,
+      (res: any) => {
+        // 後処理
+        console.log('res.data=' + res.data)
+      },
+      (e: any) => {},
+    )
+  }
+
+  function makeReservationData(): Reservation {
+    // TODO 参加者一覧を送信する
+    const item = currentItem
+    const reservationId = localStorage.getItem('employee_id')
+    if (reservationId === null) {
+      console.log('ID が保存されていません。ログインし直してください。')
+      return
+    }
+    if (currentFacility === null || currentFacility === '') {
+      console.log('施設 ID が保存されていません。')
+      return
+    }
+    return {
+      facility_id: parseInt(currentFacility),
+      title: item.title,
+      reservation_person_id: parseInt(reservationId),
+      tel: item.tel,
+      usage_date: getUsageDate(),
+      start_time: getStartTime(),
+      end_time: getEndTime(),
+      is_private: item.is_private,
+      remarks: item.notice,
+    }
+  }
+
+  function getUsageDate(): string {
+    const item = currentItem
+    return item.start_year + '-' + item.start_month + '-' + item.start_day
+  }
+
+  function getStartTime(): string {
+    const item = currentItem
+    return item.start_hour + ':' + item.start_minute + ':00'
+  }
+
+  function getEndTime(): string {
+    const item = currentItem
+    return item.end_hour + ':' + item.end_minute + ':00'
+  }
 
   function changeHub(event: any) {
     console.log('currentHub', event.currentTarget.value)
@@ -197,15 +250,6 @@ function MakeRsrv() {
         break
       case RSRV_TYPE.StartMinute:
         item.start_minute = value
-        break
-      case RSRV_TYPE.EndYear:
-        item.end_year = value
-        break
-      case RSRV_TYPE.EndMonth:
-        item.end_month = value
-        break
-      case RSRV_TYPE.EndDay:
-        item.end_day = value
         break
       case RSRV_TYPE.EndHour:
         item.end_hour = value
@@ -440,82 +484,12 @@ function MakeRsrv() {
                 lg={2}
                 data-tip="日をまたいだ予約を可能とするか否かで、日付の実装有無が変わる"
               >
-                予約終了日時
+                予約終了時刻
               </Form.Label>
             </Col>
-            <Col>
-              <Form.Select
-                className="col-6 mt-3 mb-1"
-                onChange={(e) => changeReservation(e, RSRV_TYPE.EndYear)}
-                aria-label="Default select example"
-              >
-                <option>年</option>
-                <option value="2021">2021 年</option>
-                <option value="2022">2022 年</option>
-                <option value="2023">2023 年</option>
-              </Form.Select>
-            </Col>
-            <Col>
-              <Form.Select
-                className="col-6 mt-3 mb-1"
-                onChange={(e) => changeReservation(e, RSRV_TYPE.EndMonth)}
-                aria-label="Default select example"
-              >
-                <option>月</option>
-                <option value="1">1 月</option>
-                <option value="2">2 月</option>
-                <option value="3">3 月</option>
-                <option value="4">4 月</option>
-                <option value="5">5 月</option>
-                <option value="6">6 月</option>
-                <option value="7">7 月</option>
-                <option value="8">8 月</option>
-                <option value="9">9 月</option>
-                <option value="10">10 月</option>
-                <option value="11">11 月</option>
-                <option value="12">12 月</option>
-              </Form.Select>
-            </Col>
-            <Col>
-              <Form.Select
-                className="col-6 mt-3 mb-1"
-                onChange={(e) => changeReservation(e, RSRV_TYPE.EndDay)}
-                aria-label="Default select example"
-              >
-                <option>日</option>
-                <option value="1">1 日</option>
-                <option value="2">2 日</option>
-                <option value="3">3 日</option>
-                <option value="4">4 日</option>
-                <option value="5">5 日</option>
-                <option value="6">6 日</option>
-                <option value="7">7 日</option>
-                <option value="8">8 日</option>
-                <option value="9">9 日</option>
-                <option value="10">10 日</option>
-                <option value="11">11 日</option>
-                <option value="12">12 日</option>
-                <option value="13">13 日</option>
-                <option value="14">14 日</option>
-                <option value="15">15 日</option>
-                <option value="16">16 日</option>
-                <option value="17">17 日</option>
-                <option value="18">18 日</option>
-                <option value="19">19 日</option>
-                <option value="20">20 日</option>
-                <option value="21">21 日</option>
-                <option value="22">22 日</option>
-                <option value="23">23 日</option>
-                <option value="24">24 日</option>
-                <option value="25">25 日</option>
-                <option value="26">26 日</option>
-                <option value="27">27 日</option>
-                <option value="28">28 日</option>
-                <option value="29">29 日</option>
-                <option value="30">30 日</option>
-                <option value="31">31 日</option>
-              </Form.Select>
-            </Col>
+            <Col></Col>
+            <Col></Col>
+            <Col></Col>
             <Col>
               <Form.Select
                 className="col-6 mt-3 mb-1"
@@ -638,14 +612,10 @@ function MakeRsrv() {
               className="col-6"
               variant="primary"
               type="submit"
+              onClick={(e) => registerReservation(e)}
               data-tip="API: registerRsrv(...) を呼び出す"
             >
               申　請
-            </Button>
-          </Col>
-          <Col>
-            <Button className="col-6" variant="outline-primary" type="submit">
-              キャンセル
             </Button>
           </Col>
         </Row>

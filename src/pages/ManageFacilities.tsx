@@ -47,29 +47,35 @@ function ManageFacilities() {
     const body = {
       hub_id: currentHub,
     }
-    callApiPost('/facility-info', defaultHeaders, body, (res: any) => {
-      let facilityList = new Array<Facility>()
-      console.log('facilities=', res.data)
-      for (const key in res.data) {
-        const item = res.data[key]
-        const facility: Facility = {
-          id: item.id,
-          name: item.name,
-          hub_id: item.hub_id,
-          hourly_fees: item.hourly_fees,
-          reservable_timezone_start_time: item.reservable_timezone_start_time,
-          reservable_timezone_end_time: item.reservable_timezone_end_time,
-          continuous_avairable_time: item.continuous_avairable_time,
+    callApiPost(
+      '/facility-info',
+      defaultHeaders,
+      body,
+      (res: any) => {
+        let facilityList = new Array<Facility>()
+        console.log('facilities=', res.data)
+        for (const key in res.data) {
+          const item = res.data[key]
+          const facility: Facility = {
+            id: item.id,
+            name: item.name,
+            hub_id: item.hub_id,
+            hourly_fees: item.hourly_fees,
+            reservable_timezone_start_time: item.reservable_timezone_start_time,
+            reservable_timezone_end_time: item.reservable_timezone_end_time,
+            continuous_avairable_time: item.continuous_avairable_time,
+          }
+          facilityList.push(facility)
         }
-        facilityList.push(facility)
-      }
-      if (facilityList.length > 1) {
-        facilityList = facilityList.sort((a, b) => {
-          return a.id < b.id ? -1 : 1
-        })
-      }
-      setFacilities(facilityList)
-    })
+        if (facilityList.length > 1) {
+          facilityList = facilityList.sort((a, b) => {
+            return a.id < b.id ? -1 : 1
+          })
+        }
+        setFacilities(facilityList)
+      },
+      (e: any) => {},
+    )
   }, [currentHub])
 
   function updateFacility(event: Event, id: number) {

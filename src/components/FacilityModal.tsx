@@ -75,10 +75,16 @@ const FacilityModalBase: forwardRef<FacilityModalProps> = (props, ref) => {
       continuous_avairable_time:
         item.continuous_time_hour + ':' + item.continuous_time_minute + ':00',
     }
-    callApiPost('/facility', defaultHeaders, facility, (res: any) => {
-      console.log('res.data=' + res.data)
-      setShow(false)
-    })
+    callApiPost(
+      '/facility',
+      defaultHeaders,
+      facility,
+      (res: any) => {
+        console.log('res.data=' + res.data)
+        setShow(false)
+      },
+      (e: any) => {},
+    )
   }
 
   function validateFacility(): boolean {

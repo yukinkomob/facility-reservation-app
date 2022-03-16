@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
@@ -5,10 +6,13 @@ import { Container } from 'react-bootstrap'
 import ReactTooltip from 'react-tooltip'
 import { useHistory } from 'react-router'
 import { callApiPost } from 'common/ApiWrapper'
+import Alert from 'react-bootstrap/Alert'
 
 function Login() {
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
+  const [showAlert, setShowAlert] = useState<boolean>(false)
+  const [errMessage, setErrMessage] = useState<string>('')
 
   const history = useHistory()
 
@@ -22,15 +26,31 @@ function Login() {
     password,
   }
 
-  function doLogin() {
+  function doLogin(event: any) {
+    event.preventDefault()
     console.log('login')
-    callApiPost('/login', headers, body, (res: any) => {
-      console.log(res)
-      const { data } = res
-      console.log('token', data.access_token)
-      localStorage.setItem('token', data.access_token)
-      history.push('/rsrv_list')
-    })
+    saveEmployeeId()
+    callApiPost(
+      '/login',
+      headers,
+      body,
+      (res: any) => {
+        console.log(res)
+        const { data } = res
+        console.log('token', data.access_token)
+        localStorage.setItem('token', data.access_token)
+        history.push('/rsrv_list')
+      },
+      (e: any) => {
+        console.log(e)
+        setShowAlert(true)
+        setErrMessage('ログイン時にエラーが発生 [' + e.message + ']')
+      },
+    )
+  }
+
+  function saveEmployeeId() {
+    localStorage.setItem('employee_id', email)
   }
 
   function changeEmail(e: any) {
@@ -49,6 +69,14 @@ function Login() {
         className="position-absolute top-50 start-50 translate-middle"
         style={{ width: '18rem' }}
       >
+        <Alert
+          variant="danger"
+          show={showAlert}
+          onClose={() => setShowAlert(false)}
+          dismissible
+        >
+          {errMessage}
+        </Alert>
         <Form>
           <div className="text-center mb-3">
             <h3
@@ -91,7 +119,7 @@ function Login() {
             variant="null"
             type="button"
             className="w-100 mb-2 btn btn-primary"
-            onClick={() => doLogin()}
+            onClick={(e: any) => doLogin(e)}
             data-tip="API: login(id, password)"
           >
             ログイン
