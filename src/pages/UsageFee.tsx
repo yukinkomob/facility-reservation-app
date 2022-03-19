@@ -5,6 +5,7 @@ import { Col, Form, ListGroup, Row } from 'react-bootstrap'
 import ReactTooltip from 'react-tooltip'
 import { callApiGet, callApiPost } from 'common/ApiWrapper'
 import { INVALID_ID } from 'common/Constants'
+import Alert from 'react-bootstrap/Alert'
 
 interface Hub {
   id: number
@@ -41,6 +42,8 @@ function UsageFee() {
   const [currentYear, setCurrentYear] = useState<string>('')
   const [currentMonth, setCurrentMonth] = useState<string>('')
   const [usageFees, setUsageFees] = useState<Array<UsageFeeData>>()
+  const [showAlert, setShowAlert] = useState<boolean>(false)
+  const [errMessage, setErrMessage] = useState<string>('')
 
   useEffect(() => {
     // 拠点を取得
@@ -55,7 +58,10 @@ function UsageFee() {
         }
         setHubs(HubList)
       },
-      (e: any) => {},
+      (e: any) => {
+        setShowAlert(true)
+        setErrMessage('API エラーが発生 [' + e.message + ']')
+      },
     )
   }, [])
 
@@ -72,7 +78,10 @@ function UsageFee() {
         }
         setDepartments(departmentList)
       },
-      (e: any) => {},
+      (e: any) => {
+        setShowAlert(true)
+        setErrMessage('API エラーが発生 [' + e.message + ']')
+      },
     )
   }, [currentHub])
 
@@ -107,7 +116,10 @@ function UsageFee() {
           }
           setUsageFees(items)
         },
-        (e: any) => {},
+        (e: any) => {
+          setShowAlert(true)
+          setErrMessage('API エラーが発生 [' + e.message + ']')
+        },
       )
     }
   }, [currentYear, currentMonth, currentDepartment])
@@ -151,6 +163,14 @@ function UsageFee() {
     <div>
       <Header />
       <div className="main-top container">
+        <Alert
+          variant="danger"
+          show={showAlert}
+          onClose={() => setShowAlert(false)}
+          dismissible
+        >
+          {errMessage}
+        </Alert>
         <h1
           data-tip="このページは下記の仕様を満たす必要があります。<br />
           ・施設の利用料金を利用者の部署に課金しているが、各拠点の庶務係が毎月手計算して<br />いる。計算作業に時間がかかり、計算間違いも含まれる。<br />

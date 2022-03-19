@@ -5,6 +5,7 @@ import ReactTooltip from 'react-tooltip'
 import { useState, useEffect } from 'react'
 import { defaultHeaders, callApiGet, callApiPost } from 'common/ApiWrapper'
 import { INVALID_ID } from 'common/Constants'
+import Alert from 'react-bootstrap/Alert'
 
 // TODO 予約者 ID は自分自身であり、ログイン成功時に ID をlocalStorageに保存しておくこと
 
@@ -68,6 +69,8 @@ function MakeRsrv() {
       name: '',
     }),
   )
+  const [showAlert, setShowAlert] = useState<boolean>(false)
+  const [errMessage, setErrMessage] = useState<string>('')
 
   useEffect(() => {
     // 拠点を取得
@@ -82,7 +85,10 @@ function MakeRsrv() {
         }
         setHubs(HubList)
       },
-      (e: any) => {},
+      (e: any) => {
+        setShowAlert(true)
+        setErrMessage('API エラーが発生 [' + e.message + ']')
+      },
     )
   }, [])
 
@@ -99,7 +105,10 @@ function MakeRsrv() {
         }
         setFacilities(facilityList)
       },
-      (e: any) => {},
+      (e: any) => {
+        setShowAlert(true)
+        setErrMessage('API エラーが発生 [' + e.message + ']')
+      },
     )
   }, [currentHub])
 
@@ -115,7 +124,10 @@ function MakeRsrv() {
         // 後処理
         console.log('res.data=' + res.data)
       },
-      (e: any) => {},
+      (e: any) => {
+        setShowAlert(true)
+        setErrMessage('API エラーが発生 [' + e.message + ']')
+      },
     )
   }
 
@@ -286,6 +298,14 @@ function MakeRsrv() {
     <div>
       <Header />
       <div className="main-top container">
+        <Alert
+          variant="danger"
+          show={showAlert}
+          onClose={() => setShowAlert(false)}
+          dismissible
+        >
+          {errMessage}
+        </Alert>
         <h1
           data-tip="このページは下記の仕様を満たす必要があります。<br />
           ・拠点数：8拠点（横浜本社、大阪、広島、福岡、仙台、札幌、高松、新潟）<br />

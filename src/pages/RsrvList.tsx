@@ -5,6 +5,7 @@ import { Col, Form, ListGroup, Row } from 'react-bootstrap'
 import ReactTooltip from 'react-tooltip'
 import { defaultHeaders, callApiGet, callApiPost } from 'common/ApiWrapper'
 import { INVALID_ID } from 'common/Constants'
+import Alert from 'react-bootstrap/Alert'
 
 type Reservation = {
   id: number
@@ -26,6 +27,8 @@ function RsrvList() {
   const [currentYear, setCurrentYear] = useState<string>('')
   const [currentMonth, setCurrentMonth] = useState<string>('')
   const [currentDay, setCurrentDay] = useState<string>('')
+  const [showAlert, setShowAlert] = useState<boolean>(false)
+  const [errMessage, setErrMessage] = useState<string>('')
 
   useEffect(() => {
     // 拠点を取得
@@ -40,7 +43,10 @@ function RsrvList() {
         }
         setHubs(HubList)
       },
-      (e: any) => {},
+      (e: any) => {
+        setShowAlert(true)
+        setErrMessage('API エラーが発生 [' + e.message + ']')
+      },
     )
   }, [])
 
@@ -57,7 +63,10 @@ function RsrvList() {
         }
         setFacilities(facilityList)
       },
-      (e: any) => {},
+      (e: any) => {
+        setShowAlert(true)
+        setErrMessage('API エラーが発生 [' + e.message + ']')
+      },
     )
   }, [currentHub])
 
@@ -88,7 +97,10 @@ function RsrvList() {
         }
         setReservations(reservationList)
       },
-      (e: any) => {},
+      (e: any) => {
+        setShowAlert(true)
+        setErrMessage('API エラーが発生 [' + e.message + ']')
+      },
     )
   }, [currentFacility, currentYear, currentMonth, currentDay])
 
@@ -157,6 +169,14 @@ function RsrvList() {
     <div>
       <Header />
       <div className="main-top container">
+        <Alert
+          variant="danger"
+          show={showAlert}
+          onClose={() => setShowAlert(false)}
+          dismissible
+        >
+          {errMessage}
+        </Alert>
         <h1
           data-tip="このページは下記の仕様を満たす必要があります。<br />
           ・施設予約情報には、予約者情報（部署、電話番号）、予約対象施設詳細（拠点名、施<br />設名、利用料金（１時間あたり））、予約情報（タイトル、開始日時、終了日<br />時）、参加者情報（氏名、会社名）、備考を含められるようにしたい。<br />

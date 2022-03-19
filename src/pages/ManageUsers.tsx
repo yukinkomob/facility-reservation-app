@@ -4,6 +4,7 @@ import { Form, ListGroup } from 'react-bootstrap'
 import ReactTooltip from 'react-tooltip'
 import { useState, useEffect } from 'react'
 import { defaultHeaders, callApiGet } from 'common/ApiWrapper'
+import Alert from 'react-bootstrap/Alert'
 
 interface Account {
   employee_id: number
@@ -18,6 +19,8 @@ interface Account {
 
 function ManageUsers() {
   const [accounts, setAccounts] = useState<Array<Account>>()
+  const [showAlert, setShowAlert] = useState<boolean>(false)
+  const [errMessage, setErrMessage] = useState<string>('')
 
   useEffect(() => {
     callApiGet(
@@ -30,7 +33,10 @@ function ManageUsers() {
         }
         setAccounts(accountList)
       },
-      (e: any) => {},
+      (e: any) => {
+        setShowAlert(true)
+        setErrMessage('API エラーが発生 [' + e.message + ']')
+      },
     )
   }, [])
 
@@ -38,6 +44,14 @@ function ManageUsers() {
     <div>
       <Header />
       <div className="main-top container">
+        <Alert
+          variant="danger"
+          show={showAlert}
+          onClose={() => setShowAlert(false)}
+          dismissible
+        >
+          {errMessage}
+        </Alert>
         <h1
           data-tip="このページは下記の仕様を満たす必要があります。<br />
           ・施設を予約した従業員が所属している部署毎に施設利用料金を計算（月ごと）できる<br />ようにしたい。<br />

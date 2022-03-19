@@ -12,6 +12,7 @@ import {
 } from 'common/ApiWrapper'
 import { INVALID_ID } from 'common/Constants'
 import FacilityModal from 'components/FacilityModal'
+import Alert from 'react-bootstrap/Alert'
 
 type Facility = {
   id: number
@@ -27,6 +28,8 @@ function ManageFacilities() {
   const [hubs, setHubs] = useState<Array<Hub>>()
   const [currentHub, setCurrentHub] = useState<number>(INVALID_ID)
   const [facilities, setFacilities] = useState<Array<Facility>>()
+  const [showAlert, setShowAlert] = useState<boolean>(false)
+  const [errMessage, setErrMessage] = useState<string>('')
   const childRef = useRef()
 
   const onClose = () => setShow(false)
@@ -44,7 +47,10 @@ function ManageFacilities() {
         }
         setHubs(HubList)
       },
-      (e: any) => {},
+      (e: any) => {
+        setShowAlert(true)
+        setErrMessage('API エラーが発生 [' + e.message + ']')
+      },
     )
   }, [])
 
@@ -79,7 +85,10 @@ function ManageFacilities() {
         }
         setFacilities(facilityList)
       },
-      (e: any) => {},
+      (e: any) => {
+        setShowAlert(true)
+        setErrMessage('API エラーが発生 [' + e.message + ']')
+      },
     )
   }, [currentHub])
 
@@ -120,7 +129,10 @@ function ManageFacilities() {
         updatedFacilities?.push(facility)
         setFacilities(updatedFacilities)
       },
-      (e: any) => {},
+      (e: any) => {
+        setShowAlert(true)
+        setErrMessage('API エラーが発生 [' + e.message + ']')
+      },
     )
   }
 
@@ -145,7 +157,10 @@ function ManageFacilities() {
         )
         setFacilities(updatedFacilities)
       },
-      (e: any) => {},
+      (e: any) => {
+        setShowAlert(true)
+        setErrMessage('API エラーが発生 [' + e.message + ']')
+      },
     )
   }
 
@@ -260,6 +275,14 @@ function ManageFacilities() {
         ref={childRef}
       />
       <div className="main-top container">
+        <Alert
+          variant="danger"
+          show={showAlert}
+          onClose={() => setShowAlert(false)}
+          dismissible
+        >
+          {errMessage}
+        </Alert>
         <h1
           data-tip="このページは下記の仕様を満たす必要があります。<br />
           ・拠点数：8拠点（横浜本社、大阪、広島、福岡、仙台、札幌、高松、新潟）<br />
