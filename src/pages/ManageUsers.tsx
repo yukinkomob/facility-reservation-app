@@ -10,13 +10,14 @@ interface Account {
   employee_id: number
   name: string
   furigana: string
-  hub_id: number
-  department_id: number
+  hub_name: string
+  department_name: string
   tel: string
   email: string
-  role_id: number
+  role_name: string
 }
 
+// TODO 拠点、所属、役割の情報を取得して表示
 function ManageUsers() {
   const [accounts, setAccounts] = useState<Array<Account>>()
   const [showAlert, setShowAlert] = useState<boolean>(false)
@@ -27,6 +28,7 @@ function ManageUsers() {
       '/account',
       defaultHeaders,
       (res: any) => {
+        console.log(res.data)
         const accountList = new Array<Account>()
         for (const key in res.data) {
           accountList.push(res.data[key])
@@ -85,7 +87,10 @@ function ManageUsers() {
                   <div>
                     ID: {account.employee_id} {account.name}
                   </div>
-                  <div>拠点: 横浜本社、所属: 社長室、役割: 管理者</div>
+                  <div>
+                    拠点: {account.hub_name}、所属: {account.department_name}
+                    、役割: {account.role_name}
+                  </div>
                   <div>
                     TEL: {account.tel}、Email: {account.email}
                   </div>
