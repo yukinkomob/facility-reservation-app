@@ -288,7 +288,7 @@ function UsageFee() {
               <ListGroup.Item>
                 <div>
                   拠点名: {item.hub_name}、施設名: {item.facility_name}
-                  、利用者名: no data{' '}
+                  、利用者名: {item.account_name}
                 </div>
                 <div>利用日: {item.date}</div>
                 <div>
