@@ -194,7 +194,7 @@ function UsageFee() {
         <Form>
           <Row>
             <Col>
-              <Form.Label column lg={2}>
+              <Form.Label column lg={10}>
                 閲覧年月
               </Form.Label>
             </Col>

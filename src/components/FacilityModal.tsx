@@ -250,7 +250,6 @@ const FacilityModalBase: forwardRef<FacilityModalProps> = (props, ref) => {
           <ListGroup className="mt-3 mb-5">
             <ListGroup.Item>
               <Form className="mt-3">
-                <Form.Label>施設ID : {item.id}</Form.Label>
                 <Row>
                   <Col>
                     <Form.Label column lg={2}>
@@ -269,7 +268,7 @@ const FacilityModalBase: forwardRef<FacilityModalProps> = (props, ref) => {
                 </Row>
                 <Row>
                   <Col>
-                    <Form.Label column lg={2}>
+                    <Form.Label column lg={10}>
                       1時間当たりの利用料金
                     </Form.Label>
                   </Col>
@@ -285,7 +284,7 @@ const FacilityModalBase: forwardRef<FacilityModalProps> = (props, ref) => {
                 </Row>
                 <Row>
                   <Col>
-                    <Form.Label column lg={2}>
+                    <Form.Label column lg={10}>
                       予約可能時間帯
                     </Form.Label>
                   </Col>
@@ -342,6 +341,9 @@ const FacilityModalBase: forwardRef<FacilityModalProps> = (props, ref) => {
                       から
                     </Form.Label>
                   </Col>
+                </Row>
+                <Row>
+                  <Col></Col>
                   <Col>
                     <Form.Select
                       className="col-6 mt-3 mb-1"
@@ -398,7 +400,7 @@ const FacilityModalBase: forwardRef<FacilityModalProps> = (props, ref) => {
                 </Row>
                 <Row>
                   <Col>
-                    <Form.Label column lg={2}>
+                    <Form.Label column lg={10}>
                       連続利用可能時間
                     </Form.Label>
                   </Col>
