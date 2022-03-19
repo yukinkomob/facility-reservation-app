@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react'
 import { defaultHeaders, callApiGet, callApiPost } from 'common/ApiWrapper'
 import { INVALID_ID } from 'common/Constants'
 import Alert from 'react-bootstrap/Alert'
+import { isTemplateExpression } from 'typescript'
 
 // TODO 予約者 ID は自分自身であり、ログイン成功時に ID をlocalStorageに保存しておくこと
 
@@ -240,7 +241,7 @@ function MakeRsrv() {
   function changeReservation(event: any, type: RSRV_TYPE) {
     console.log('Reservation data=', event.currentTarget.value)
     const value = event.currentTarget.value
-    const item = currentItem
+    const item = { ...currentItem }
     if (item === null || item === undefined) {
       console.log('予約データがありません。')
       return
@@ -292,6 +293,77 @@ function MakeRsrv() {
         break
     }
     console.log(item)
+    setCurrentItem(item)
+  }
+
+  function getDiffStr() {
+    return getDiffHours() + '時間' + getDiffMinutes() + '分'
+  }
+
+  function getDiffHours(): string {
+    const item = currentItem
+    if (
+      item.start_hour === '' ||
+      item.start_minute === '' ||
+      item.end_hour === '' ||
+      item.end_minute === ''
+    ) {
+      console.log('日付データが設定されていません。')
+      return ''
+    }
+    const startHours = parseInt(item.start_hour)
+    const startMinutes = parseInt(item.start_minute)
+    const endHours = parseInt(item.end_hour)
+    const endMinutes = parseInt(item.end_minute)
+    const diffMinutes =
+      endHours * 60 + endMinutes - (startHours * 60 + startMinutes)
+    console.log('差分時間の時は' + diffMinutes / 60)
+    return diffMinutes / 60
+  }
+
+  function getDiffMinutes(): string {
+    const item = currentItem
+    if (
+      item.start_hour === '' ||
+      item.start_minute === '' ||
+      item.end_hour === '' ||
+      item.end_minute === ''
+    ) {
+      console.log('日付データが設定されていません。')
+      return ''
+    }
+    const startHours = parseInt(item.start_hour)
+    const startMinutes = parseInt(item.start_minute)
+    const endHours = parseInt(item.end_hour)
+    const endMinutes = parseInt(item.end_minute)
+    const diffMinutes =
+      endHours * 60 + endMinutes - (startHours * 60 + startMinutes)
+    console.log('差分時間の分は' + (diffMinutes % 60))
+    return diffMinutes % 60
+  }
+
+  function getDiffFee() {
+    const hours = getDiffHours()
+    const minutes = getDiffMinutes()
+    const time = parseFloat(hours) * 60.0 + parseFloat(minutes)
+    const FeeAnHour = facilities[currentFacility].hourly_fees
+    return (parseFloat(FeeAnHour) * time) / 60.0
+  }
+
+  function checkDiff() {
+    const item = currentItem
+    if (
+      item.start_hour === '' ||
+      item.start_minute === '' ||
+      item.end_hour === '' ||
+      item.end_minute === ''
+    ) {
+      console.log('日付データが設定されていません。')
+      return ''
+    }
+    console.log(
+      'diffHours=' + getDiffHours() + ', diffMinutes=' + getDiffMinutes(),
+    )
   }
 
   return (
@@ -358,9 +430,12 @@ function MakeRsrv() {
               )
             })}
           </Form.Select>
-          <Form.Text data-tip="ここの料金の部分は選択した施設の値を表示">
-            選択した施設の利用料金は、1時間あたり 1,500 円です。
-          </Form.Text>
+          {facilities !== '' && currentFacility !== '' && (
+            <Form.Text data-tip="ここの料金の部分は選択した施設の値を表示">
+              選択した施設の利用料金は、1時間あたり{' '}
+              {facilities[currentFacility].hourly_fees} 円です。
+            </Form.Text>
+          )}
           <Form.Control
             className="mt-3"
             type="text"
@@ -371,7 +446,7 @@ function MakeRsrv() {
             <Col>
               <Form.Label
                 column
-                lg={2}
+                lg={4}
                 data-tip="電話番号は場合により変わる可能性があるので、毎回入力。予約者名はアカウント情報から抽出するので不要"
               >
                 予約者電話番号
@@ -390,7 +465,7 @@ function MakeRsrv() {
             <Col>
               <Form.Label
                 column
-                lg={2}
+                lg={10}
                 data-tip="ピッカーUIを利用するのが良さそう。利用可能時間帯や連続利用可能時間を考慮する必要がある"
               >
                 予約開始日時
@@ -475,7 +550,7 @@ function MakeRsrv() {
                 onChange={(e) => changeReservation(e, RSRV_TYPE.StartHour)}
                 aria-label="Default select example"
               >
-                <option>時</option>
+                <option value="">時</option>
                 <option value="08">8 時</option>
                 <option value="09">9 時</option>
                 <option value="10">10 時</option>
@@ -499,7 +574,7 @@ function MakeRsrv() {
                 onChange={(e) => changeReservation(e, RSRV_TYPE.StartMinute)}
                 aria-label="Default select example"
               >
-                <option>分</option>
+                <option value="">分</option>
                 <option value="00">00 分</option>
                 <option value="15">15 分</option>
                 <option value="30">30 分</option>
@@ -511,7 +586,7 @@ function MakeRsrv() {
             <Col>
               <Form.Label
                 column
-                lg={2}
+                lg={10}
                 data-tip="日をまたいだ予約を可能とするか否かで、日付の実装有無が変わる"
               >
                 予約終了時刻
@@ -526,9 +601,9 @@ function MakeRsrv() {
                 onChange={(e) => changeReservation(e, RSRV_TYPE.EndHour)}
                 aria-label="Default select example"
               >
-                <option>時</option>
-                <option value="8">8 時</option>
-                <option value="9">9 時</option>
+                <option value="">時</option>
+                <option value="08">8 時</option>
+                <option value="09">9 時</option>
                 <option value="10">10 時</option>
                 <option value="11">11 時</option>
                 <option value="12">12 時</option>
@@ -550,7 +625,7 @@ function MakeRsrv() {
                 onChange={(e) => changeReservation(e, RSRV_TYPE.EndMinute)}
                 aria-label="Default select example"
               >
-                <option>分</option>
+                <option value="">分</option>
                 <option value="00">00 分</option>
                 <option value="15">15 分</option>
                 <option value="30">30 分</option>
@@ -558,9 +633,18 @@ function MakeRsrv() {
               </Form.Select>
             </Col>
           </Row>
-          <Form.Text data-tip="ここも入力内容から自動計算で処理する">
-            選択した施設の利用料金は、〇時間のご利用で 計 〇〇〇 円です。
-          </Form.Text>
+          {checkDiff()}
+          {facilities !== '' &&
+            currentFacility !== '' &&
+            currentItem.start_hour !== '' &&
+            currentItem.start_minute &&
+            currentItem.end_hour !== '' &&
+            currentItem.end_minute !== '' && (
+              <Form.Text data-tip="ここの料金の部分は選択した施設の値を表示">
+                選択した施設の利用料金は、{getDiffStr()}のご利用で 計{' '}
+                {getDiffFee()} 円です。
+              </Form.Text>
+            )}
           <br />
           <Form.Label
             column="lg"
