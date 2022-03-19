@@ -356,7 +356,7 @@ function ManageFacilities() {
                   </Row>
                   <Row>
                     <Col>
-                      <Form.Label column lg={2}>
+                      <Form.Label column lg={10}>
                         1時間当たりの利用料金
                       </Form.Label>
                     </Col>
@@ -372,7 +372,7 @@ function ManageFacilities() {
                   </Row>
                   <Row>
                     <Col>
-                      <Form.Label column lg={2}>
+                      <Form.Label column lg={14}>
                         予約可能時間帯
                       </Form.Label>
                     </Col>
@@ -433,6 +433,9 @@ function ManageFacilities() {
                         から
                       </Form.Label>
                     </Col>
+                  </Row>
+                  <Row>
+                    <Col></Col>
                     <Col>
                       <Form.Select
                         className="col-6 mt-3 mb-1"
@@ -493,7 +496,7 @@ function ManageFacilities() {
                   </Row>
                   <Row>
                     <Col>
-                      <Form.Label column lg={2}>
+                      <Form.Label column lg={10}>
                         連続利用可能時間
                       </Form.Label>
                     </Col>
